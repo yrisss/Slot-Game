@@ -7,5 +7,9 @@ namespace Data
     {
         [SerializeField] private Sprite sprite;
         public Sprite Sprite => sprite;
+        
+        [SerializeField] private int count;
+        public int Count => count;
+        
     }
 }
