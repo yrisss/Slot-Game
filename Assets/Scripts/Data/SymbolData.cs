@@ -7,5 +7,12 @@ namespace Data
     {
         [SerializeField] private Sprite sprite;
         public Sprite Sprite => sprite;
+        
+        [SerializeField] private int cost;
+        public int Cost => cost;
+
+        [SerializeField] private SymbolType symbolType;
+        public SymbolType Type => symbolType;
+
     }
 }
