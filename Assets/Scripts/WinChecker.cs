@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Animation;
 using Coffee.UIExtensions;
@@ -6,55 +8,76 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-    public class WinChecker : MonoBehaviour
+public class WinChecker : MonoBehaviour
+{
+    [SerializeField] private WinAnimation _winAnimation;
+    [SerializeField] private PrizeCalculator _prizeCalculator;
+
+    [SerializeField] private ReelsLogic.Reel[] _reels;
+    [SerializeField] private GameConfig _gameConfig;
+
+    private int totalWin;
+    private int newBalance;
+    private int startBalance;
+
+    private List<int[]> trueWinLines;
+
+    private Symbol[] winLineSymbols;
+    // private int _visibleSymbols;
+    //private GameConfig _gameConfig;
+    //private RectTransform[] _symbolsOnReel;
+    //private UIParticle[] _particles;
+
+    // public WinChecker(int visibleSymbols, GameConfig gameConfig, RectTransform[] symbolsOnReel, UIParticle[] particles)
+    // {
+    //     _visibleSymbols = visibleSymbols;
+    //     _gameConfig = gameConfig;
+    //     _symbolsOnReel = symbolsOnReel;
+    //     _particles = particles;
+    // }
+
+    public void CheckResult(int visibleSymbols, GameConfig gameConfig, ReelsLogic.Reel[] reels)
     {
-        [SerializeField] private WinAnimation _winAnimation;
-
-        [SerializeField] private ReelsLogic.Reel[] _reels;
-       // private int _visibleSymbols;
-        //private GameConfig _gameConfig;
-        //private RectTransform[] _symbolsOnReel;
-        //private UIParticle[] _particles;
+        winLineSymbols = new Symbol[reels.Length];
+        trueWinLines = new List<int[]>();
+        List<int> winSymbolCost = new List<int>();
         
-        // public WinChecker(int visibleSymbols, GameConfig gameConfig, RectTransform[] symbolsOnReel, UIParticle[] particles)
-        // {
-        //     _visibleSymbols = visibleSymbols;
-        //     _gameConfig = gameConfig;
-        //     _symbolsOnReel = symbolsOnReel;
-        //     _particles = particles;
-        // }
-
-        public void CheckResult(int visibleSymbols, GameConfig gameConfig, ReelsLogic.Reel[] reels)
+        foreach (var winLine in _gameConfig.WinLines)
         {
-            int[] WinLine = new int[visibleSymbols];
-            
-            foreach (var winLine in gameConfig.WinLines)
+            int[] symbolIndex = winLine.SymbolsPosition;
+
+            for (int i = 0; i < symbolIndex.Length; i++)
             {
-                int[] symbolIndex = winLine.SymbolsPosition;
-        
-                Sprite firstSymbol = reels[0].VisibleSymbolsOnReel[symbolIndex[0]].GetComponent<Image>().sprite;
-        
-                bool isWin = true;
-        
-                for (int i = 1; i < symbolIndex.Length; i++)
-                {
-                    Sprite currentSymbol = reels[i].VisibleSymbolsOnReel[symbolIndex[i]].GetComponent<Image>().sprite;
-        
-                    if (firstSymbol != currentSymbol)
-                    {
-                        isWin = false;
-                        break;
-                    }
-        
-                    // var totalWin = _gameConfig.Symbols
-                    WinLine = symbolIndex;
-                }
-        
-                if (isWin)
-                {
-                     _winAnimation.WinAnim(WinLine);
-                     break;
-                }
+                winLineSymbols[i] = _reels[i].VisibleSymbols[_reels[i].VisibleSymbols.Length - 1 - symbolIndex[i]];
+            }
+            
+            bool isWinningLine = CompareSymbols();
+
+            if (isWinningLine)
+            {
+                 trueWinLines.Add(symbolIndex);
+                 winSymbolCost.Add(winLineSymbols[0].SymbolInfo.Cost);
             }
         }
+
+        _prizeCalculator.PrizeCalculate(winSymbolCost);
+        _winAnimation.WinAnim(trueWinLines);
     }
+    
+    private bool CompareSymbols()
+    {
+        var firstSymbol = winLineSymbols[0].SymbolInfo;
+
+        for (int i = 1; i < _reels.Length; i++)
+        {
+            var currentSymbol = winLineSymbols[i].SymbolInfo;
+
+            if (firstSymbol != currentSymbol)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}

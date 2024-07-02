@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: 7
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: c4a756710247eab4d9f2595ecb2fd5e2, type: 3}
+  cost: 3

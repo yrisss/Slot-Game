@@ -2,6 +2,7 @@ using Coffee.UIExtensions;
 using Data;
 using Reel;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -11,7 +12,8 @@ namespace ReelsLogic
     {
         [SerializeField] private GameConfig gameConfig;
         [SerializeField] private RectTransform[] symbolsOnReel;
-        [SerializeField] private RectTransform[] visibleSymbols;
+        [SerializeField] private RectTransform[] visibleSymbolsRT;
+        [SerializeField] private Symbol[] visibleSymbols;
         [SerializeField] private UIParticle[] _particles;
         
         [SerializeField] private RectTransform mainCanvasRT;
@@ -35,7 +37,8 @@ namespace ReelsLogic
             set => _reelState = value;
         }
 
-        public RectTransform[] VisibleSymbolsOnReel => visibleSymbols;
+        public RectTransform[] VisibleSymbolsRTOnReel => visibleSymbolsRT;
+        public Symbol[] VisibleSymbols => visibleSymbols;
         public UIParticle[] Particles => _particles;
         
         public float SymbolHeight => _symbolHeight;
@@ -63,21 +66,24 @@ namespace ReelsLogic
         private void ChangeSymbol(RectTransform symbol)
         {
             if (_reelState == ReelState.Stopping)
-                symbol.GetComponent<Image>().sprite = GetFinalSprite();
-
+            {
+                symbol.GetComponent<Symbol>().SymbolInfo = GetFinalSprite();
+                symbol.GetComponent<Image>().sprite = symbol.GetComponent<Symbol>().SymbolInfo.Sprite;
+            }
             else
-                symbol.GetComponent<Image>().sprite = GetRandomSprite();
-
+            {
+                symbol.GetComponent<Symbol>().SymbolInfo = GetRandomSprite();
+                symbol.GetComponent<Image>().sprite = symbol.GetComponent<Symbol>().SymbolInfo.Sprite;
+            }
         }
 
-        private Sprite GetRandomSprite()
+        private SymbolData GetRandomSprite()
         {
             var random = Random.Range(0, gameConfig.Symbols.Length);
-            var newSprite = gameConfig.Symbols[random].Sprite;
-            return newSprite;
+            return gameConfig.Symbols[random];
         }
 
-        private Sprite GetFinalSprite()
+        private SymbolData GetFinalSprite()
         {
             
             var finalScreenSymbolIndex = _currentSymbolIndex + (reelID - 1) * gameConfig.VisibleSymbolsOnReel;
@@ -86,9 +92,9 @@ namespace ReelsLogic
             if (_currentFinalScreen >= currentFinalScreen.Length)
                 finalScreenSymbolIndex = 0;
 
-            var newSprite = gameConfig.Symbols[currentFinalScreen[finalScreenSymbolIndex]];
+            var newSymbolData = gameConfig.Symbols[currentFinalScreen[finalScreenSymbolIndex]];
             _currentSymbolIndex++;
-            return newSprite.Sprite;
+            return newSymbolData;
         }
 
         private void MoveSymbolUp(RectTransform symbol)

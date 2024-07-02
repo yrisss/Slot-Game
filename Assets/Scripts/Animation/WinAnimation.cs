@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Coffee.UIExtensions;
 using DG.Tweening;
 using UnityEngine;
@@ -9,14 +11,26 @@ namespace Animation
     {
         [SerializeField] private ReelsLogic.Reel[] _reels;
         private RectTransform[] _visibleSymbolsOnReel;
-        
 
-        public void WinAnim(int[] winSymbolIndex)
+        private int lineCounter;
+
+        private List<int[]> winLines;
+
+        [SerializeField]private ChangeBalanceAnimation _changeBalanceAnimation;
+        
+        public void WinAnim(List<int[]> winSymbolIndex)
+        {
+            winLines = winSymbolIndex;
+            lineCounter = 0;
+            StartAnim(winSymbolIndex[lineCounter]);
+        }
+
+        private void StartAnim(int[] winLine)
         {
             for (int i = 0; i < _reels.Length; i++)
             {
-                _visibleSymbolsOnReel = _reels[i].VisibleSymbolsOnReel;
-                 Animation(_visibleSymbolsOnReel, winSymbolIndex, i);
+                _visibleSymbolsOnReel = _reels[i].VisibleSymbolsRTOnReel;
+                Animation(_visibleSymbolsOnReel, winLine, i);
             }
         }
 
@@ -62,9 +76,26 @@ namespace Animation
                         symbolImage.DOFade(1f, 0.5f);
                     }
                 }
+
+                if (currentReel == _reels.Length - 1)
+                {
+                    lineCounter++;
+                    NextLine();
+                }
             });
         }
 
+        private void NextLine()
+        {
+            if (lineCounter < winLines.Count)
+            {
+                StartAnim(winLines[lineCounter]);
+            }
+            else
+            {
+                StartCoroutine(_changeBalanceAnimation.ChangeBalance());
+            }
+        }
 
         public void ForceStopWinAnim()
         {

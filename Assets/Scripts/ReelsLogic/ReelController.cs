@@ -156,10 +156,11 @@ namespace ReelsLogic
             reelRT.localPosition = new Vector3(reelRT.localPosition.x, _reelStartPositionY);
 
             _reelsDictionary[reelRT].ResetSymbolPosition(traveledDistance);
-            
-            if( _reelsDictionary[reelRT].ReelID == reelsRT.Length)
 
-                    _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
+            if (_reelsDictionary[reelRT].ReelID == reelsRT.Length)
+            {
+                _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
+            }
         }
     }
 }
