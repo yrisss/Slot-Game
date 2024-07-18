@@ -34,7 +34,7 @@ namespace ReelsLogic
         [SerializeField] private float delay;
         [SerializeField] private Ease startEase;
         [SerializeField] private Ease stopEase;
-        [SerializeField] private float boostDistance, linearDistance; 
+        [SerializeField] private float boostDistance, linearDistance, linearSpeed; 
         [SerializeField] private float boostDuration, linearDuration, stoppingDuration;
 
         [SerializeField] private RectTransform antisipationReelRT;
@@ -48,19 +48,19 @@ namespace ReelsLogic
         private float _reelStartPositionY;
         private bool isForceStop = false;
         public bool isFreeSpin = false;
-        [SerializeField]private float _symbolHeight = 144f;
+        [SerializeField]private float _symbolHeight = 0f;
 
         [SerializeField] private GameConfig gameConfig;
         [SerializeField] private AnimationManager _animationManager;
-        [SerializeField] private List<int[]> trueWinLines;
+        private List<int[]> trueWinLines;
         
         private int startBalance = 0;
         private void Start()
         {
+            linearDistance = linearSpeed * -linearDuration;
             StartListner();
             stopButton.interactable = false;
             stopButtonRT.localScale = Vector3.zero;
-            //_symbolHeight = reels[0].SymbolHeight;
             _reelStartPositionY = reelsRT[0].localPosition.y;
             _reelsDictionary = new Dictionary<RectTransform, Reel>();
             for (int i = 0; i < reelsRT.Length; i++)
@@ -121,18 +121,26 @@ namespace ReelsLogic
 
         public void ForceStop()
         {
-            if (_reelsDictionary[reelsRT[reelsRT.Length]].ReelState == ReelState.Stop)
-            {
-                stopButton.interactable = false;
-                foreach (var reel in reels)
-                {
-                    reel.ForceStopWinAnim();
-                }
-            }
+            // if (_reelsDictionary[reelsRT[reelsRT.Length]].ReelState == ReelState.Stop)
+            // {
+            //     stopButton.interactable = false;
+            //     foreach (var reel in reels)
+            //     {
+            //         reel.ForceStopWinAnim();
+            //     }
+            // }
+            // else
+            // {
+            //     ForceScrollStop();
+            // }
+            stopButton.interactable = false; 
 
-            else
+            foreach (var reelRT in reelsRT)
             {
-                ForceScrollStop();
+                if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
+                {
+                    ReelCorrection(reelRT);
+                }            
             }
         }
 
@@ -170,7 +178,7 @@ namespace ReelsLogic
                         //FreeSpinStop?.Invoke();
                     }
                     
-                    else if (_reelsDictionary[reelRT].ReelID == reelsRT.Length)
+                    else if (_reelsDictionary[reelRT].ReelID == reelsRT.Length && !isFreeSpin)
                     {
                         stopButton.interactable = false;
                         stopButtonRT.localScale = Vector3.zero;
