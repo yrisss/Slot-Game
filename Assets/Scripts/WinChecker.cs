@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 public class WinChecker : MonoBehaviour
 {
-    [SerializeField] private WinAnimation _winAnimation;
     [SerializeField] private PrizeCalculator _prizeCalculator;
 
     [SerializeField] private ReelsLogic.Reel[] _reels;
@@ -36,7 +35,7 @@ public class WinChecker : MonoBehaviour
     //     _particles = particles;
     // }
 
-    public void CheckResult(int visibleSymbols, GameConfig gameConfig, ReelsLogic.Reel[] reels)
+    public List<int[]> CheckResult(int visibleSymbols, GameConfig gameConfig, ReelsLogic.Reel[] reels)
     {
         winLineSymbols = new Symbol[reels.Length];
         trueWinLines = new List<int[]>();
@@ -61,7 +60,7 @@ public class WinChecker : MonoBehaviour
         }
 
         _prizeCalculator.PrizeCalculate(winSymbolCost);
-        _winAnimation.WinAnim(trueWinLines);
+        return trueWinLines;
     }
     
     private bool CompareSymbols()

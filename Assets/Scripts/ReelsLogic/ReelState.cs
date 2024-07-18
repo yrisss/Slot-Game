@@ -1,4 +1,4 @@
-namespace Reel
+namespace ReelsLogic
 {
     public enum ReelState
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Coffee.UIExtensions;
@@ -9,20 +10,23 @@ namespace Animation
 {
     public class WinAnimation : MonoBehaviour
     {
+        public Action ONAnimationComplete;
         [SerializeField] private ReelsLogic.Reel[] _reels;
         private RectTransform[] _visibleSymbolsOnReel;
 
         private int lineCounter;
 
         private List<int[]> winLines;
-
-        [SerializeField]private ChangeBalanceAnimation _changeBalanceAnimation;
+        
         
         public void WinAnim(List<int[]> winSymbolIndex)
         {
             winLines = winSymbolIndex;
             lineCounter = 0;
-            StartAnim(winSymbolIndex[lineCounter]);
+            if (winSymbolIndex != null)
+            {
+                StartAnim(winSymbolIndex[lineCounter]);
+            }
         }
 
         private void StartAnim(int[] winLine)
@@ -93,7 +97,8 @@ namespace Animation
             }
             else
             {
-                StartCoroutine(_changeBalanceAnimation.ChangeBalance());
+                ONAnimationComplete?.Invoke();
+               // StartCoroutine(_changeBalanceAnimation.ChangeBalance());
             }
         }
 

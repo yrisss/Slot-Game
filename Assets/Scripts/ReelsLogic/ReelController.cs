@@ -1,7 +1,12 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using Animation;
 using Data;
+using DefaultNamespace;
 using DG.Tweening;
-using Reel;
+using PopUp;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +14,11 @@ namespace ReelsLogic
 {
     public class ReelController : MonoBehaviour
     {
+        public Action SpinStart;
+        public Action SpinStop;
+        public Action FreeSpinStart;
+        public Action FreeSpinStop;
+        
         [SerializeField] private RectTransform[] reelsRT;
         [SerializeField] private Reel[] reels;
         [SerializeField] private Button playButton;
@@ -17,6 +27,8 @@ namespace ReelsLogic
         [SerializeField] private RectTransform stopButtonRT;
 
         [SerializeField] private WinChecker _winChecker;
+        [SerializeField] private ScatterChecker _scatterChecker;
+        [SerializeField] private PopUpView _popUpView;
         
         [Header("SpinParameters")]
         [SerializeField] private float delay;
@@ -25,16 +37,27 @@ namespace ReelsLogic
         [SerializeField] private float boostDistance, linearDistance; 
         [SerializeField] private float boostDuration, linearDuration, stoppingDuration;
 
+        [SerializeField] private RectTransform antisipationReelRT;
+        [SerializeField] private float antisipationDistance, antisipationDuration;
+        [SerializeField] private int freeSpinsCount;
+        private int freeSpinsCounter;
+        
         [SerializeField] private int visibleSymbolsOnReel;
     
         private Dictionary<RectTransform, Reel> _reelsDictionary;
         private float _reelStartPositionY;
         private bool isForceStop = false;
+        public bool isFreeSpin = false;
         [SerializeField]private float _symbolHeight = 144f;
 
         [SerializeField] private GameConfig gameConfig;
+        [SerializeField] private AnimationManager _animationManager;
+        [SerializeField] private List<int[]> trueWinLines;
+        
+        private int startBalance = 0;
         private void Start()
         {
+            StartListner();
             stopButton.interactable = false;
             stopButtonRT.localScale = Vector3.zero;
             //_symbolHeight = reels[0].SymbolHeight;
@@ -44,6 +67,13 @@ namespace ReelsLogic
             {
                 _reelsDictionary.Add(reelsRT[i], reels[i]);
             }
+            
+            
+        }
+
+        private void StartListner()
+        {
+           // FreeSpinStop += ScrollStart;
         }
 
         public void ScrollStart()
@@ -129,7 +159,18 @@ namespace ReelsLogic
                 {
                     _reelsDictionary[reelRT].ReelState = ReelState.Stop;
                     PrepareReel(reelRT);
-                    if (_reelsDictionary[reelRT].ReelID == reelsRT.Length)
+
+                    if (_reelsDictionary[reelRT].ReelID == reelsRT.Length - 1 && !isFreeSpin)
+                    {
+                        TryStartAntisipation();
+                    }
+
+                    if (_reelsDictionary[reelRT].ReelID == reelsRT.Length && isFreeSpin)
+                    {
+                        //FreeSpinStop?.Invoke();
+                    }
+                    
+                    else if (_reelsDictionary[reelRT].ReelID == reelsRT.Length)
                     {
                         stopButton.interactable = false;
                         stopButtonRT.localScale = Vector3.zero;
@@ -139,6 +180,25 @@ namespace ReelsLogic
                     }
                 });
         }
+
+        private void TryStartAntisipation()
+        {
+            if (_scatterChecker.CheckAnticipation(reels[0]) > 0 &&
+                _scatterChecker.CheckAnticipation(reels[1]) > 0)
+            {
+                _animationManager.StartAnticipationAnimation(antisipationDuration);
+                AntisipationScroll();
+            }
+        }
+
+        private void AntisipationScroll()
+        {
+            DOTween.Kill(antisipationReelRT);
+            antisipationReelRT.DOAnchorPosY(antisipationDistance, antisipationDuration)
+                .SetEase(Ease.Linear)
+                .OnComplete(() => ScrollStop(antisipationReelRT));
+        }
+        
 
         private float CalculateExtraDistance(float reelCurrentPositionY)
         {
@@ -156,11 +216,60 @@ namespace ReelsLogic
             reelRT.localPosition = new Vector3(reelRT.localPosition.x, _reelStartPositionY);
 
             _reelsDictionary[reelRT].ResetSymbolPosition(traveledDistance);
-
+            
             if (_reelsDictionary[reelRT].ReelID == reelsRT.Length)
             {
-                _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
+                if (isFreeSpin && freeSpinsCounter > 0)
+                {
+                    FreeSpin();
+                    _popUpView.ChangeFreeSpinsCount(freeSpinsCounter);
+                    freeSpinsCounter--;
+                }
+                else if (isFreeSpin && freeSpinsCounter == 0)
+                {
+                    isFreeSpin = false;
+                    _animationManager.ONWinAnimationComplete = null;
+                    _popUpView.ChangeFreeSpinsCount(freeSpinsCounter);
+                    _animationManager.ONWinAnimationComplete += ShowTotalWinPopUp;
+                    trueWinLines = _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
+                    if (trueWinLines != null)
+                    {
+                        _animationManager.StartWinAnimation(trueWinLines);
+                    }
+                }    
+                else if (_scatterChecker.FreeSpinsChecker() >= 3 && !isFreeSpin)
+                {
+                    StartCoroutine(StartFreeSpins());
+                }
+                else
+                {
+                    _animationManager.ONWinAnimationComplete += _animationManager.StartChangeBalanceAnimation;
+                    trueWinLines = _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
+                    _animationManager.StartWinAnimation(trueWinLines);
+                }
             }
+        }
+
+        private void ShowTotalWinPopUp()
+        {
+            _popUpView.ShowWinPopUp(startBalance, _animationManager);
+        }
+
+        private IEnumerator StartFreeSpins()
+        {
+            startBalance = PlayerPrefs.GetInt("Balance", 0);
+            isFreeSpin = true;
+            _animationManager.ONWinAnimationComplete += ScrollStart;
+            freeSpinsCounter = freeSpinsCount;
+            _popUpView.ShowBonusGamePopUp(freeSpinsCounter);
+            yield return new WaitForSeconds(3f);
+            ScrollStart();
+        }
+        
+        private void FreeSpin()
+        {
+            trueWinLines = _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
+            _animationManager.StartWinAnimation(trueWinLines);
         }
     }
 }
