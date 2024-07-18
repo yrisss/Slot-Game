@@ -232,10 +232,8 @@ namespace ReelsLogic
                     _popUpView.ChangeFreeSpinsCount(freeSpinsCounter);
                     _animationManager.ONWinAnimationComplete += ShowTotalWinPopUp;
                     trueWinLines = _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
-                    if (trueWinLines != null)
-                    {
+                    if (trueWinLines.Count != 0)
                         _animationManager.StartWinAnimation(trueWinLines);
-                    }
                 }    
                 else if (_scatterChecker.FreeSpinsChecker() >= 3 && !isFreeSpin)
                 {
@@ -245,7 +243,8 @@ namespace ReelsLogic
                 {
                     _animationManager.ONWinAnimationComplete += _animationManager.StartChangeBalanceAnimation;
                     trueWinLines = _winChecker.CheckResult(visibleSymbolsOnReel, gameConfig, reels);
-                    _animationManager.StartWinAnimation(trueWinLines);
+                    if(trueWinLines.Count != 0)
+                        _animationManager.StartWinAnimation(trueWinLines);
                 }
             }
         }

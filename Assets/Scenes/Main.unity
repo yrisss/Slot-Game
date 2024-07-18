@@ -5394,6 +5394,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5605696386232536186, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5605696386232536186, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6565845149116316801, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 0
@@ -11314,6 +11322,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2878502523098485143, guid: d859ffb60fc3f6f49a5ac55a0e764e90, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3790616598305047697, guid: d859ffb60fc3f6f49a5ac55a0e764e90, type: 3}
       propertyPath: m_Name
       value: RockClimber
