@@ -57,7 +57,7 @@ namespace ReelsLogic
         private int startBalance = 0;
         private void Start()
         {
-            linearDistance = linearSpeed * -linearDuration;
+           // linearDistance = linearSpeed * -linearDuration;
             StartListner();
             stopButton.interactable = false;
             stopButtonRT.localScale = Vector3.zero;
@@ -99,6 +99,7 @@ namespace ReelsLogic
             }
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         private void ScrollLinear(RectTransform reelRT)
         {
             _reelsDictionary[reelRT].ReelState = ReelState.Spin;

@@ -5302,6 +5302,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reel2
       objectReference: {fileID: 0}
+    - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4934351960838754988, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 0
@@ -5522,6 +5526,10 @@ PrefabInstance:
     - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_Name
       value: Reel3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4934351960838754988, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -11322,6 +11330,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2161854023711687087, guid: d859ffb60fc3f6f49a5ac55a0e764e90, type: 3}
+      propertyPath: boostDistance
+      value: -800
+      objectReference: {fileID: 0}
+    - target: {fileID: 2161854023711687087, guid: d859ffb60fc3f6f49a5ac55a0e764e90, type: 3}
+      propertyPath: linearDistance
+      value: -5555
+      objectReference: {fileID: 0}
     - target: {fileID: 2878502523098485143, guid: d859ffb60fc3f6f49a5ac55a0e764e90, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -11752,6 +11768,10 @@ PrefabInstance:
     - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_Name
       value: Reel4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4934351960838754988, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -12251,6 +12271,10 @@ PrefabInstance:
     - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_Name
       value: Reel5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4934351960838754988, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -23129,6 +23153,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reel1
       objectReference: {fileID: 0}
+    - target: {fileID: 4841085660467666888, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4934351960838754988, guid: 66a20a4fcb83a4946a0323be5a0a5ccc, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 0
@@ -24071,11 +24099,11 @@ MonoBehaviour:
   _winChecker: {fileID: 6125885703073521832}
   _scatterChecker: {fileID: 5492724706617937078}
   _popUpView: {fileID: 1358758811790686085}
-  delay: 1
+  delay: 0.5
   startEase: 5
   stopEase: 6
   boostDistance: -800
-  linearDistance: -6400
+  linearDistance: -3200
   linearSpeed: 2000
   boostDuration: 0.38
   linearDuration: 1.5
