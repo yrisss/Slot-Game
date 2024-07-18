@@ -1,6 +1,5 @@
 using Coffee.UIExtensions;
 using Data;
-using Reel;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -20,7 +19,7 @@ namespace ReelsLogic
 
         [SerializeField] private int reelID;
         
-        private float _exitPosition = 390f;
+        [SerializeField] private float _exitPosition = 532;
         private float _symbolHeight;
         private float _mainCanvasScale;
 
@@ -46,6 +45,7 @@ namespace ReelsLogic
     
         private void Start()
         {
+          //  Debug.Log(symbolsOnReel[0].transform.position);
             _symbolHeight = symbolsOnReel[0].rect.height;
             //_winChecker = new WinChecker(visibleSymbols.Length, gameConfig, symbolsOnReel, _particles);
             _mainCanvasScale = mainCanvasRT.lossyScale.y;
@@ -58,7 +58,7 @@ namespace ReelsLogic
                 if (symbol.position.y <= _exitPosition * _mainCanvasScale)
                 {
                     MoveSymbolUp(symbol);
-                   // ChangeSymbol(symbol);
+                    ChangeSymbol(symbol);
                 }
             }
         }
