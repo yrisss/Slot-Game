@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Coffee.UIExtensions;
 using DG.Tweening;
+using Infastructure.Management;
+using Reels;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +14,7 @@ namespace Animation
     public class WinAnimation : MonoBehaviour
     {
         public Action ONAnimationComplete;
-        [SerializeField] private ReelsLogic.Reel[] reels;
+        [SerializeField] private Reel[] reels;
         [SerializeField] private SoundManager soundManager;
         
         private RectTransform[] _visibleSymbolsOnReel;

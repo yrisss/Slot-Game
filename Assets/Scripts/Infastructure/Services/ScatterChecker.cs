@@ -1,0 +1,51 @@
+using System.Collections.Generic;
+using Data;
+using Reels;
+using UnityEngine;
+
+namespace Infastructure.Services
+{
+    public class ScatterChecker : MonoBehaviour
+    {
+        [SerializeField] private Reel[] reels;
+        [SerializeField] private GameConfig gameConfig;
+
+        private int _totalWin;
+        private int _newBalance;
+        private int _startBalance;
+
+        private int _scattersOnReel;
+        private List<int[]> _trueWinLines;
+
+        private Symbol[] _winLineSymbols;
+
+        public int CheckAnticipation(Reel reel)
+        {
+            _scattersOnReel = 0;
+            for (int i = 0; i < reel.VisibleSymbolsRTOnReel.Length; i++)
+            {
+                if (reel.VisibleSymbols[i].SymbolInfo.Type == SymbolType.Scatter)
+                    _scattersOnReel++;
+            }
+
+            return _scattersOnReel;
+        }
+
+        public int FreeSpinsChecker()
+        {
+            _scattersOnReel = 0;
+
+            foreach (var reel in reels)
+            {
+
+                for (int i = 0; i < reel.VisibleSymbolsRTOnReel.Length; i++)
+                {
+                    if (reel.VisibleSymbols[i].SymbolInfo.Type == SymbolType.Scatter)
+                        _scattersOnReel++;
+                }
+            }
+
+            return _scattersOnReel;
+        }
+    }
+}
