@@ -4,7 +4,8 @@ namespace ReelsLogic
     {
         Stop,
         Spin,
-        Stopping
+        Stopping,
+        ForceStopping
     }
 }
 

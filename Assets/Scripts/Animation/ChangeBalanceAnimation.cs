@@ -8,12 +8,14 @@ public class ChangeBalanceAnimation : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _balance;
     [SerializeField] private int _duration;
     [SerializeField] private int _countFPS;
-
+    [SerializeField] private SoundManager _soundManager;
+    
     private int currentBalance;
     private int newBalance;
     
     public IEnumerator ChangeBalance()
     {
+        _soundManager.PlayMusic(SoundType.ChangeBalanceSound);
         WaitForSeconds Wait = new WaitForSeconds(1f / _countFPS);
         int stepAmount;
 
@@ -30,6 +32,7 @@ public class ChangeBalanceAnimation : MonoBehaviour
 
             yield return Wait;
         }
+        _soundManager.StopMusic(SoundType.ChangeBalanceSound);
     }
 
     public void SetValues(int startBalance, int newBalance)

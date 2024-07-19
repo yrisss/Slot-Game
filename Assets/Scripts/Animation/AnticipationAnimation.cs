@@ -14,11 +14,11 @@ namespace Animation
         [SerializeField] private Image frame;
         [SerializeField] private List<UIParticle> antisipationParticle;
         [SerializeField] private RectTransform reel;
-
+        [SerializeField] private SoundManager _soundManager;
 
         public void StartAnticipationAnim(float duration)
         {
-            
+            _soundManager.PlayMusic(SoundType.AntisipationMusic);
             var position = reel.position;
             position = new Vector3(position.x, position.y, 1);
             reel.position = position;
@@ -51,6 +51,7 @@ namespace Animation
             fade.rectTransform.DOScale(Vector3.one, 0f);
             fade.DOFade(0f, 0.5f);
             frame.DOFade(0f, 0.5f);
+            _soundManager.StopMusic(SoundType.AntisipationMusic);
         }
     }
 }

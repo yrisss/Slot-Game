@@ -13,17 +13,17 @@ namespace ReelsLogic
         [SerializeField] private RectTransform[] symbolsOnReel;
         [SerializeField] private RectTransform[] visibleSymbolsRT;
         [SerializeField] private Symbol[] visibleSymbols;
-        [SerializeField] private UIParticle[] _particles;
+        [SerializeField] private UIParticle[] particles;
         
         [SerializeField] private RectTransform mainCanvasRT;
 
         [SerializeField] private int reelID;
         
-        [SerializeField] private float _exitPosition = 532;
+        [SerializeField] private float exitPosition = 387;
         private float _symbolHeight;
         private float _mainCanvasScale;
 
-        [SerializeField]private WinChecker _winChecker;
+        [SerializeField] private WinChecker winChecker;
         
         private int _currentSymbolIndex = 0;
         private int _currentFinalScreen = 0;
@@ -38,7 +38,7 @@ namespace ReelsLogic
 
         public RectTransform[] VisibleSymbolsRTOnReel => visibleSymbolsRT;
         public Symbol[] VisibleSymbols => visibleSymbols;
-        public UIParticle[] Particles => _particles;
+        public UIParticle[] Particles => particles;
         
         public float SymbolHeight => _symbolHeight;
         public float ReelID => reelID;
@@ -55,7 +55,7 @@ namespace ReelsLogic
         {
             foreach (var symbol in symbolsOnReel)
             {
-                if (symbol.position.y <= _exitPosition * _mainCanvasScale)
+                if (symbol.position.y <= exitPosition * _mainCanvasScale)
                 {
                     MoveSymbolUp(symbol);
                     ChangeSymbol(symbol);
@@ -65,7 +65,7 @@ namespace ReelsLogic
 
         private void ChangeSymbol(RectTransform symbol)
         {
-            if (_reelState == ReelState.Stopping)
+            if (_reelState == ReelState.Stopping && symbol != symbolsOnReel[^1])
             {
                 symbol.GetComponent<Symbol>().SymbolInfo = GetFinalSprite();
                 symbol.GetComponent<Image>().sprite = symbol.GetComponent<Symbol>().SymbolInfo.Sprite;
@@ -85,11 +85,10 @@ namespace ReelsLogic
 
         private SymbolData GetFinalSprite()
         {
-            
             var finalScreenSymbolIndex = _currentSymbolIndex + (reelID - 1) * gameConfig.VisibleSymbolsOnReel;
             var currentFinalScreen = gameConfig.FinalScreen[_currentFinalScreen].FinalScreen;
 
-            if (_currentFinalScreen >= currentFinalScreen.Length)
+            if (_currentFinalScreen > currentFinalScreen.Length)
                 finalScreenSymbolIndex = 0;
 
             var newSymbolData = gameConfig.Symbols[currentFinalScreen[finalScreenSymbolIndex]];
@@ -120,16 +119,6 @@ namespace ReelsLogic
                 var correctedPosition = new Vector3(currentSymbolPosition.x, correction);
                 symbol.localPosition = correctedPosition;
             }
-        }
-
-        public void CheckResult()
-        {
-            //_winChecker.CheckResult(visibleSymbols.Length, gameConfig, symbolsOnReel);
-        }
-        
-        public void ForceStopWinAnim()
-        {
-           // _winChecker.ForceStopWinAnim();
         }
     }
 }

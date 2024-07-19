@@ -22,13 +22,20 @@ namespace DefaultNamespace
             _winAnimation.ONAnimationComplete += StopWinAnimation;
         }
 
-        public void StartWinAnimation(List<int[]> winAnimSymnolIndex)
+        public void StartWinAnimation(List<int[]> winAnimSymbolIndexes)
         {
-            _winAnimation.WinAnim(winAnimSymnolIndex);
+            if(winAnimSymbolIndexes.Count > 0)
+                _winAnimation.WinAnim(winAnimSymbolIndexes);
         }
 
         private void StopWinAnimation()
         {
+            ONWinAnimationComplete?.Invoke();
+        }
+
+        public void ForceStopWinAnimation(RectTransform[] visibleSymbolsOnReel)
+        {
+            _winAnimation.ForceStopWinAnim(visibleSymbolsOnReel);
             ONWinAnimationComplete?.Invoke();
         }
         
