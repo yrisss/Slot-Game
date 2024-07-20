@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Coffee.UIExtensions;
 using DG.Tweening;
+using Infastructure.Management;
+using Reels;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,35 +14,36 @@ namespace Animation
     public class WinAnimation : MonoBehaviour
     {
         public Action ONAnimationComplete;
-        [SerializeField] private ReelsLogic.Reel[] _reels;
-        private RectTransform[] _visibleSymbolsOnReel;
-
-        private int lineCounter;
-
-        private List<int[]> winLines;
+        [SerializeField] private Reel[] reels;
+        [SerializeField] private SoundManager soundManager;
         
+        private RectTransform[] _visibleSymbolsOnReel;
+        private int _lineCounter;
+        private List<int[]> _winLines;
         
         public void WinAnim(List<int[]> winSymbolIndex)
         {
-            winLines = winSymbolIndex;
-            lineCounter = 0;
-            if (winSymbolIndex != null)
+            _winLines = winSymbolIndex;
+            _lineCounter = 0;
+            if (winSymbolIndex.Count > 0)
             {
-                StartAnim(winSymbolIndex[lineCounter]);
+                StartAnim(winSymbolIndex[_lineCounter]);
             }
         }
 
         private void StartAnim(int[] winLine)
         {
-            for (int i = 0; i < _reels.Length; i++)
+            soundManager.PlaySound(SoundType.WinLineSound);
+            for (int i = 0; i < reels.Length; i++)
             {
-                _visibleSymbolsOnReel = _reels[i].VisibleSymbolsRTOnReel;
+                _visibleSymbolsOnReel = reels[i].VisibleSymbolsRTOnReel;
                 Animation(_visibleSymbolsOnReel, winLine, i);
             }
         }
 
         private void Animation(RectTransform[] visibleSymbolsOnReel, int[] winSymbolIndex, int currentReel)
         {
+            //Array.Reverse(winSymbolIndex);
             for (int i = 0; i < visibleSymbolsOnReel.Length; i++)
             {
                 if (i == winSymbolIndex[currentReel])
@@ -55,11 +59,11 @@ namespace Animation
             }
 
             var currentSymbol = visibleSymbolsOnReel[winSymbolIndex[currentReel]];
-            var currentParticle = _reels[currentReel].Particles[winSymbolIndex[currentReel]];
+            var currentParticle = reels[currentReel].Particles[winSymbolIndex[currentReel]];
 
             DOTween.Kill(currentSymbol);
             Sequence symbolSequence = DOTween.Sequence();
-
+        
             currentParticle.gameObject.SetActive(true);
             currentParticle.Play();
 
@@ -81,9 +85,9 @@ namespace Animation
                     }
                 }
 
-                if (currentReel == _reels.Length - 1)
+                if (currentReel == reels.Length - 1)
                 {
-                    lineCounter++;
+                    _lineCounter++;
                     NextLine();
                 }
             });
@@ -91,25 +95,35 @@ namespace Animation
 
         private void NextLine()
         {
-            if (lineCounter < winLines.Count)
+            if (_lineCounter < _winLines.Count)
             {
-                StartAnim(winLines[lineCounter]);
+                StartAnim(_winLines[_lineCounter]);
             }
             else
             {
                 ONAnimationComplete?.Invoke();
-               // StartCoroutine(_changeBalanceAnimation.ChangeBalance());
             }
         }
 
         public void ForceStopWinAnim()
         {
-            foreach (var symbol in _visibleSymbolsOnReel)
+            DOTween.KillAll();
+            foreach (var reel in reels)
             {
-                DOTween.Kill(symbol);
-                symbol.GetComponent<Image>().DOFade(1f, 0.2f);
-                symbol.DOScale(Vector3.one, 0.2f);
-                symbol.DOMoveZ(0f, 0.2f);
+                foreach (var particle in reel.Particles)
+                {
+                    particle.Stop();
+                    particle.gameObject.SetActive(false);
+                }
+                
+                foreach (var symbol in reel.VisibleSymbolsRTOnReel)
+                {
+                    symbol.GetComponent<Image>().DOFade(1f, 0.2f);
+                    symbol.DOScale(Vector3.one, 0.2f);
+                    symbol.DOMoveZ(0f, 0.2f);
+                }
+
+                
             }
         }
     }

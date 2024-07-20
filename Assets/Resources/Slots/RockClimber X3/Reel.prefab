@@ -5617,7 +5617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d206db321d0292478270c5ac414aa66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _symbolData: {fileID: 11400000, guid: dbc2be7344e25c748b10084f8e7e9c58, type: 2}
+  symbolData: {fileID: 11400000, guid: dbc2be7344e25c748b10084f8e7e9c58, type: 2}
 --- !u!1 &2407664166939262927
 GameObject:
   m_ObjectHideFlags: 0
@@ -10702,7 +10702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d206db321d0292478270c5ac414aa66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _symbolData: {fileID: 11400000, guid: 1c2a8e69aef3a8b4d8260c170e7947dc, type: 2}
+  symbolData: {fileID: 11400000, guid: 1c2a8e69aef3a8b4d8260c170e7947dc, type: 2}
 --- !u!1 &3412852095872083034
 GameObject:
   m_ObjectHideFlags: 0
@@ -20642,7 +20642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d206db321d0292478270c5ac414aa66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _symbolData: {fileID: 11400000, guid: 2294e59d2d509de4ea7c4eac72ed54cd, type: 2}
+  symbolData: {fileID: 11400000, guid: 1c2a8e69aef3a8b4d8260c170e7947dc, type: 2}
 --- !u!1 &5834448902140284945
 GameObject:
   m_ObjectHideFlags: 0
@@ -20865,13 +20865,14 @@ MonoBehaviour:
   - {fileID: 1147023247245680237}
   - {fileID: 1479176491227374316}
   - {fileID: 5825210409990779008}
-  _particles:
+  particles:
   - {fileID: 6687202022946343624}
   - {fileID: 8207373324250137388}
   - {fileID: 9061259746444316539}
   mainCanvasRT: {fileID: 0}
   reelID: 3
-  _winChecker: {fileID: 0}
+  exitPosition: 387
+  winChecker: {fileID: 0}
 --- !u!1 &6605525603953432440
 GameObject:
   m_ObjectHideFlags: 0
@@ -25718,6 +25719,7 @@ GameObject:
   - component: {fileID: 3251061840612260488}
   - component: {fileID: 3961876197532082329}
   - component: {fileID: 8648654653578564903}
+  - component: {fileID: 735783022646186801}
   m_Layer: 5
   m_Name: Antisipation
   m_TagString: Untagged
@@ -25809,6 +25811,27 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &735783022646186801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7645090166241947145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc05441060e4ced9bb1a523fcd2b07f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fade: {fileID: 0}
+  frame: {fileID: 3435490830731789407}
+  antisipationParticle:
+  - {fileID: 856288304792029599}
+  - {fileID: 1362712218196257181}
+  - {fileID: 5595428382674854553}
+  - {fileID: 2996190195636268684}
+  reel: {fileID: 2512417845250201460}
+  soundManager: {fileID: 0}
 --- !u!1 &7677972153420112490
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotsGame:
   - {fileID: 3790616598305047697, guid: d859ffb60fc3f6f49a5ac55a0e764e90, type: 3}
+  - {fileID: 8867541886074041964, guid: cdea328d1b35f1344a2e221c374fe120, type: 3}
