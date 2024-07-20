@@ -21,7 +21,6 @@ namespace Animation
         private int _lineCounter;
         private List<int[]> _winLines;
         
-        
         public void WinAnim(List<int[]> winSymbolIndex)
         {
             _winLines = winSymbolIndex;
@@ -44,7 +43,7 @@ namespace Animation
 
         private void Animation(RectTransform[] visibleSymbolsOnReel, int[] winSymbolIndex, int currentReel)
         {
-            Array.Reverse(winSymbolIndex);
+            //Array.Reverse(winSymbolIndex);
             for (int i = 0; i < visibleSymbolsOnReel.Length; i++)
             {
                 if (i == winSymbolIndex[currentReel])
@@ -64,7 +63,7 @@ namespace Animation
 
             DOTween.Kill(currentSymbol);
             Sequence symbolSequence = DOTween.Sequence();
-
+        
             currentParticle.gameObject.SetActive(true);
             currentParticle.Play();
 
@@ -106,14 +105,25 @@ namespace Animation
             }
         }
 
-        public void ForceStopWinAnim(RectTransform[] visibleSymbolsOnReel)
+        public void ForceStopWinAnim()
         {
-            foreach (var symbol in _visibleSymbolsOnReel)
+            DOTween.KillAll();
+            foreach (var reel in reels)
             {
-                DOTween.Kill(symbol);
-                symbol.GetComponent<Image>().DOFade(1f, 0.2f);
-                symbol.DOScale(Vector3.one, 0.2f);
-                symbol.DOMoveZ(0f, 0.2f);
+                foreach (var particle in reel.Particles)
+                {
+                    particle.Stop();
+                    particle.gameObject.SetActive(false);
+                }
+                
+                foreach (var symbol in reel.VisibleSymbolsRTOnReel)
+                {
+                    symbol.GetComponent<Image>().DOFade(1f, 0.2f);
+                    symbol.DOScale(Vector3.one, 0.2f);
+                    symbol.DOMoveZ(0f, 0.2f);
+                }
+
+                
             }
         }
     }

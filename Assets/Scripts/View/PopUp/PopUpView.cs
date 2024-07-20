@@ -5,15 +5,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PopUp
+namespace View.PopUp
 {
     public class PopUpView : MonoBehaviour
     {
-        [SerializeField] private Image fade; // Объект для затемнения экрана
-        [SerializeField] private RectTransform bonusGamePopUp; // Попап для бонусной игры
-        [SerializeField] private RectTransform totalWinPopUp; // Попап для общего выигрыша
-        [SerializeField] private TextMeshProUGUI totalWinText; // Текст для отображения общего выигрыша
-        [SerializeField] private TextMeshProUGUI balanceText; // Текст для отображения баланса
+        [SerializeField] private Image fade;
+        [SerializeField] private RectTransform bonusGamePopUp;
+        [SerializeField] private RectTransform totalWinPopUp;
+        [SerializeField] private TextMeshProUGUI totalWinText;
+        [SerializeField] private TextMeshProUGUI balanceText; 
         
 
         public void ShowWinPopUp(int startBalance, AnimationManager animationManager)

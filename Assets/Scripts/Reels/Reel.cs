@@ -47,7 +47,6 @@ namespace Reels
         {
              Debug.Log(symbolsOnReel[0].transform.position);
             _symbolHeight = symbolsOnReel[0].rect.height;
-            //_winChecker = new WinChecker(visibleSymbols.Length, gameConfig, symbolsOnReel, _particles);
             _mainCanvasScale = mainCanvasRT.lossyScale.y;
         }
 

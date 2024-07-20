@@ -1,26 +1,29 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Data;
 using TMPro;
 using UnityEngine;
 
-public class MainMenu : MonoBehaviour
+namespace View
 {
-    [SerializeField] private SlotsGameData slotsGameData;
-    [SerializeField] private TextMeshProUGUI balance;
-    [SerializeField] private GameObject Game1;
-
-    public void LoadSlot(int index)
+    public class MainMenu : MonoBehaviour
     {
-        Instantiate(slotsGameData.SlotsGame[index]);
+        [SerializeField] private SlotsGameData slotsGameData;
+        [SerializeField] private TextMeshProUGUI balance;
+        
+        public void LoadSlot(int index)
+        {
+            Instantiate(slotsGameData.SlotsGame[index]);
+            UpdateBalance();
+        }
+
+        private void Start()
+        {
+            UpdateBalance();
+        }
+
+        private void UpdateBalance()
+        {
+            var currentBalance = PlayerPrefs.GetInt("Balance", 0);
+            balance.text = currentBalance + " $";
+        }
     }
-
-
-    private void Start()
-    {
-        var currentBalance = PlayerPrefs.GetInt("Balance", 0);
-        balance.text = currentBalance + " $";
-    }
-
 }

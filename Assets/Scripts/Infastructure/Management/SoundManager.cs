@@ -65,6 +65,11 @@ namespace Infastructure.Management
             _source.PlayOneShot(clip);
         }
 
+        public void OffSounds()
+        {
+            AudioListener.volume = AudioListener.volume > 0 ? 0 : 1;
+        }
+
     }
 
 

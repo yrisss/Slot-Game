@@ -4,9 +4,9 @@ using Data;
 using DG.Tweening;
 using Infastructure.Management;
 using Infastructure.Services;
-using PopUp;
 using UnityEngine;
 using UnityEngine.UI;
+using View.PopUp;
 
 namespace Reels
 {
@@ -25,9 +25,12 @@ namespace Reels
         private float delay;
         [SerializeField] private Ease startEase;
         [SerializeField] private Ease stopEase;
-        [SerializeField] private float boostDistance, linearDistance;
+        [SerializeField] private float boostSpeed, linearSpeed;
         [SerializeField] private float boostDuration, linearDuration, stoppingDuration;
-
+        private float _boostDistance;
+        private float _linearDistance;
+        
+        
         [Space]
         [SerializeField] private int visibleSymbolsOnReel;
         [SerializeField] private float symbolHeight = 0f;
@@ -55,9 +58,12 @@ namespace Reels
         private Dictionary<RectTransform, Reel> _reelsDictionary;
         private float _reelStartPositionY;
         public bool isFreeSpin = false;
+        private bool isForceStop = false;
 
         private void Start()
         {
+            _linearDistance = linearSpeed * linearDuration;
+            _boostDistance = boostSpeed * boostDuration;
             stopButton.interactable = false;
             stopButtonRT.localScale = Vector3.zero;
             _reelStartPositionY = reelsRT[0].localPosition.y;
@@ -72,12 +78,13 @@ namespace Reels
         {
             HidePlayButton();
             stopButton.interactable = false;
-
+            isForceStop = false;
+            
             soundManager.PlayMusic(SoundType.ScrollingSound);
             for (int i = 0; i < reelsRT.Length; i++)
             {
                 var reelRT = reelsRT[i];
-                reelsRT[i].DOAnchorPosY(boostDistance, boostDuration)
+                reelsRT[i].DOAnchorPosY(_boostDistance, boostDuration)
                     .SetDelay(i * delay)
                     .SetEase(startEase)
                     .OnComplete(() =>
@@ -94,7 +101,7 @@ namespace Reels
         {
             _reelsDictionary[reelRT].ReelState = ReelState.Spin;
             DOTween.Kill(reelRT);
-            reelRT.DOAnchorPosY(linearDistance, linearDuration)
+            reelRT.DOAnchorPosY(_linearDistance, linearDuration)
                 .SetEase(Ease.Linear)
                 .OnComplete(() => ReelCorrection(reelRT));
         }
@@ -105,7 +112,7 @@ namespace Reels
             var currentPosition = reelRT.localPosition.y;
             var extraDistance = CalculateExtraDistance(currentPosition);
             var correctionDistance = currentPosition - extraDistance;
-            var correctionDuration = extraDistance / -(linearDistance / linearDuration);
+            var correctionDuration = extraDistance / -(_linearDistance / linearDuration);
             reelRT.DOAnchorPosY(correctionDistance, correctionDuration)
                 .OnComplete(() => ScrollStop(reelRT));
         }
@@ -117,10 +124,11 @@ namespace Reels
                 if (_reelsDictionary[reelRT].ReelState == ReelState.Stop)
                 {
                     stopButton.interactable = false;
-                    //animationManager.ForceStopWinAnimation(_reelsDictionary[reelRT].VisibleSymbolsRTOnReel);
+                    animationManager.ForceStopWinAnimation(_reelsDictionary[reelRT].VisibleSymbolsRTOnReel);
                 }
                 else
                 {
+                    isForceStop = true;
                     ForceScrollStop();
                 }
             }
@@ -129,7 +137,7 @@ namespace Reels
         private void ForceScrollStop()
         {
             stopButton.interactable = false;
-
+            
             foreach (var reelRT in reelsRT)
             {
                 if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
@@ -161,10 +169,6 @@ namespace Reels
                     if (_reelsDictionary[reelRT].ReelID == reelsRT.Length - 1 && !isFreeSpin)
                     {
                         TryStartAntisipation(reelRT);
-                    }
-                    else if (_reelsDictionary[reelRT].ReelID == reelsRT.Length && !isFreeSpin)
-                    {
-                        
                     }
                 });
         }
@@ -211,6 +215,8 @@ namespace Reels
 
         private void TryStartAntisipation(RectTransform reelRT)
         {
+            if(isForceStop == true)
+                return;
             var isAntisipation = true;
             for (int i = 0; i < reels.Length - 1; i++)
             {
@@ -229,7 +235,7 @@ namespace Reels
         {
             _reelsDictionary[antisipationReelRT].ReelState = ReelState.Spin;
             DOTween.Kill(antisipationReelRT);
-            antisipationReelRT.DOAnchorPosY(antisipationDistance, antisipationDuration)
+            antisipationReelRT.DOAnchorPosY(antisipationReelRT.localPosition.y * 2, antisipationDuration)
                 .SetEase(Ease.Linear)
                 .OnComplete(() => ReelCorrection(antisipationReelRT));
         }
@@ -258,9 +264,13 @@ namespace Reels
                     animationManager.ONWinAnimationComplete = null;
                     popUpView.ChangeFreeSpinsCount(_freeSpinsCounter);
                     animationManager.ONWinAnimationComplete += ShowTotalWinPopUp;
+                    animationManager.ONWinAnimationComplete += ShowPlayButton;
                     _trueWinLines = winChecker.CheckResult();
                     if (_trueWinLines.Count != 0)
+                    {
+                        stopButton.interactable = true;
                         animationManager.StartWinAnimation(_trueWinLines);
+                    }
                 }
                 else if (scatterChecker.FreeSpinsChecker() >= 3 && !isFreeSpin)
                 {
@@ -290,6 +300,7 @@ namespace Reels
 
         private IEnumerator StartFreeSpins()
         {
+            stopButton.interactable = false;
             animationManager.ONWinAnimationComplete = null;
             _startBalance = PlayerPrefs.GetInt("Balance", 0);
             isFreeSpin = true;
@@ -304,7 +315,10 @@ namespace Reels
         {
             _trueWinLines = winChecker.CheckResult();
             if (_trueWinLines.Count > 0)
+            {
+                stopButton.interactable = true;
                 animationManager.StartWinAnimation(_trueWinLines);
+            }
             else
                 ScrollStart();
         }

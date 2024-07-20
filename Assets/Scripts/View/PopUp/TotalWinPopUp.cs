@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace PopUp
+namespace View.PopUp
 {
     public class TotalWinPopUp : MonoBehaviour
     {
