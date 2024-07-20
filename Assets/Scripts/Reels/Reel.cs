@@ -45,7 +45,7 @@ namespace Reels
     
         private void Start()
         {
-             Debug.Log(symbolsOnReel[0].transform.position);
+            // Debug.Log(symbolsOnReel[0].transform.position);
             _symbolHeight = symbolsOnReel[0].rect.height;
             _mainCanvasScale = mainCanvasRT.lossyScale.y;
         }

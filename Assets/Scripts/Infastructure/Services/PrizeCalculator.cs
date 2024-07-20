@@ -23,7 +23,7 @@ namespace Infastructure.Services
 
          _newBalance = _startBalance + _totalWin;
 
-         Debug.Log(_totalWin + " " + _newBalance);
+         //Debug.Log(_totalWin + " " + _newBalance);
          PlayerPrefs.SetInt("Balance", _newBalance);
          changeBalanceAnimation.SetValues(_startBalance, _newBalance);
       }
