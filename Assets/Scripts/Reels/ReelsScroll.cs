@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Data;
 using DG.Tweening;
 using Infastructure.Management;
@@ -60,8 +61,9 @@ namespace Reels
 
         private Dictionary<RectTransform, Reel> _reelsDictionary;
         private float _reelStartPositionY;
-        public bool isFreeSpin = false;
+        public bool isFreeSpinGame = false;
         private bool isForceStop = false;
+        private List<int[]> _trueWinLines;
 
         private AntisipationScroll _antisipationScroll;
         private ForceStop _forceStop;
@@ -160,7 +162,7 @@ namespace Reels
                     _reelsDictionary[reelRT].ReelState = ReelState.Stop;
                     PrepareReel(reelRT);
 
-                    if (_reelsDictionary[reelRT].ReelID == 2 && !isFreeSpin)
+                    if (_reelsDictionary[reelRT].ReelID == 2 && !isFreeSpinGame)
                     {
                         _antisipationScroll.TryStartAntisipation(_reelsDictionary[reelRT].ReelID + 1, isForceStop);
                     }
@@ -184,7 +186,50 @@ namespace Reels
 
             _reelsDictionary[reelRT].ResetSymbolPosition(traveledDistance);
 
-            _freeSpinGame.TryStartFreeSpins(reelRT);
+           if(_reelsDictionary[reelRT].ReelID == reels.Length) 
+            FinishGame(reelRT);
+        }
+
+
+        private void FinishGame(RectTransform reelRT)
+        {
+            if (isFreeSpinGame)
+            {
+                _trueWinLines = winChecker.CheckResult();
+                if (_trueWinLines.Count != 0)
+                {
+                    HidePlayButton();
+                    animationManager.StartWinAnimation(_trueWinLines);
+                }
+            }
+
+            else
+            {
+                isFreeSpinGame = _freeSpinGame.TryStartFreeSpins(reelRT);
+                
+                if (isFreeSpinGame)
+                {
+                    animationManager.ONWinAnimationComplete = null;
+                    _freeSpinGame.StartFreeSpin();
+                    return;
+                }
+            }
+            
+            animationManager.ONWinAnimationComplete = null;
+            animationManager.ONWinAnimationComplete += animationManager.StartChangeBalanceAnimation;
+            animationManager.ONWinAnimationComplete += ShowPlayButton;
+            
+            _trueWinLines = winChecker.CheckResult();
+            if (_trueWinLines.Count != 0)
+            {
+                HidePlayButton();
+                animationManager.StartWinAnimation(_trueWinLines);
+            }
+            else
+            {
+                animationManager.ONWinAnimationComplete = null;
+                ShowPlayButton();
+            }
         }
 
         public void ShowPlayButton()

@@ -26,13 +26,17 @@ namespace Reels
         private WinChecker _winChecker;
         private ScatterChecker _scatterChecker;
 
-        private bool isFreeSpin;
+        private bool isFreeSpinGame;
         private int _freeSpinsCounter;
         private List<int[]> _trueWinLines;
         private int _startBalance = 0;
 
+        public bool IsFreeSpinGame => isFreeSpinGame;
 
-        public FreeSpinGame(ReelsScroll reelsScroll, RectTransform[] reelsRT, Dictionary<RectTransform, Reel> reelsDictionary, Button stopButton, int freeSpinsCount, PopUpView popUpView, AnimationManager animationManager, SoundManager soundManager, WinChecker winChecker, ScatterChecker scatterChecker)
+        public FreeSpinGame(ReelsScroll reelsScroll, RectTransform[] reelsRT,
+            Dictionary<RectTransform, Reel> reelsDictionary, Button stopButton, int freeSpinsCount, PopUpView popUpView,
+            AnimationManager animationManager, SoundManager soundManager, WinChecker winChecker,
+            ScatterChecker scatterChecker)
         {
             _reelsScroll = reelsScroll;
             _reelsRT = reelsRT;
@@ -46,50 +50,65 @@ namespace Reels
             _scatterChecker = scatterChecker;
         }
 
-        public void TryStartFreeSpins(RectTransform reelRT)
+        public bool TryStartFreeSpins(RectTransform reelRT)
         {
+            isFreeSpinGame = false;
+            
             if (_reelsDictionary[reelRT].ReelID == _reelsRT.Length &&
                 _reelsDictionary[reelRT].ReelState == ReelState.Stop)
             {
                 _soundManager.StopMusic(SoundType.ScrollingSound);
-                if (isFreeSpin && _freeSpinsCounter > 0)
-                {
-                    FreeSpin();
-                    _popUpView.ChangeFreeSpinsCount(_freeSpinsCounter);
-                    _freeSpinsCounter--;
-                }
-                else if (isFreeSpin && _freeSpinsCounter == 0)
-                {
-                    _soundManager.StopMusic(SoundType.FreeSpinsMusic);
-                    _soundManager.PlayMusic(SoundType.BackMusic);
-                    isFreeSpin = false;
-                    _animationManager.ONWinAnimationComplete = null;
-                    _popUpView.ChangeFreeSpinsCount(_freeSpinsCounter);
-                    _animationManager.ONWinAnimationComplete += ShowTotalWinPopUp;
-                    _animationManager.ONWinAnimationComplete += _reelsScroll.ShowPlayButton;
-                    _trueWinLines = _winChecker.CheckResult();
-                    if (_trueWinLines.Count != 0)
-                    {
-                        _stopButton.interactable = true;
-                        _animationManager.StartWinAnimation(_trueWinLines);
-                    }
-                }
-                else if (_scatterChecker.FreeSpinsChecker(_reelsDictionary[reelRT].ReelID - 1) >= 3 && !isFreeSpin)
+
+                if (_scatterChecker.FreeSpinsChecker(_reelsDictionary[reelRT].ReelID - 1) >= 3)
                 {
                     _soundManager.StopMusic(SoundType.BackMusic);
                     _soundManager.PlayMusic(SoundType.FreeSpinsMusic);
-                    _reelsScroll.StartCoroutine(StartFreeSpins());
+                    _freeSpinsCounter = _freeSpinsCount;
+                    isFreeSpinGame = true;
                 }
                 else
                 {
-                    _animationManager.ONWinAnimationComplete += _animationManager.StartChangeBalanceAnimation;
-                    _animationManager.ONWinAnimationComplete += _reelsScroll.ShowPlayButton;
-                    _trueWinLines = _winChecker.CheckResult();
-                    if (_trueWinLines.Count != 0)
-                    {
-                        _reelsScroll.HidePlayButton();
-                        _animationManager.StartWinAnimation(_trueWinLines);
-                    }
+                    isFreeSpinGame = false;
+                }
+            }
+
+            return isFreeSpinGame;
+        }
+
+        public void StartFreeSpin()
+        {
+            if (_freeSpinsCounter == _freeSpinsCount)
+                _reelsScroll.StartCoroutine(StartFreeSpinsCoroutine());
+            
+            else if (_freeSpinsCounter > 0)
+            {
+                _reelsScroll.ScrollStart();
+                _freeSpinsCounter--;
+                _popUpView.ChangeFreeSpinsCount(_freeSpinsCounter);
+            }
+
+            else
+            {
+                isFreeSpinGame = false;
+                
+                _soundManager.StopMusic(SoundType.FreeSpinsMusic);
+                _soundManager.PlayMusic(SoundType.BackMusic);
+                
+                _popUpView.ChangeFreeSpinsCount(_freeSpinsCounter);
+                
+                _animationManager.ONWinAnimationComplete = null;
+                _animationManager.ONWinAnimationComplete += ShowTotalWinPopUp;
+                _animationManager.ONWinAnimationComplete += _reelsScroll.ShowPlayButton;
+                
+                _trueWinLines = _winChecker.CheckResult();
+                if (_trueWinLines.Count != 0)
+                {
+                    _stopButton.interactable = true;
+                    _animationManager.StartWinAnimation(_trueWinLines);
+                }
+                else
+                {
+                    _animationManager.ONWinAnimationComplete?.Invoke();
                 }
             }
         }
@@ -100,17 +119,20 @@ namespace Reels
             _popUpView.ShowWinPopUp(_startBalance, _animationManager);
         }
 
-        private IEnumerator StartFreeSpins()
+        private IEnumerator StartFreeSpinsCoroutine()
         {
             _stopButton.interactable = false;
-            _animationManager.ONWinAnimationComplete = null;
             _startBalance = PlayerPrefs.GetInt("Balance", 0);
-            isFreeSpin = true;
-            _animationManager.ONWinAnimationComplete += _reelsScroll.ScrollStart;
-            _freeSpinsCounter = _freeSpinsCount;
+            
+            _animationManager.ONWinAnimationComplete = null;
+            _animationManager.ONWinAnimationComplete += FreeSpin;
+            
             _popUpView.ShowBonusGamePopUp(_freeSpinsCounter);
             yield return new WaitForSeconds(3f);
+            
             _reelsScroll.ScrollStart();
+            _freeSpinsCounter--;
+            _popUpView.ChangeFreeSpinsCount(_freeSpinsCounter);
         }
 
         private void FreeSpin()
@@ -122,7 +144,9 @@ namespace Reels
                 _animationManager.StartWinAnimation(_trueWinLines);
             }
             else
-                _reelsScroll.ScrollStart();
+            {
+                StartFreeSpin();
+            }
         }
     }
 }

@@ -20,7 +20,13 @@ namespace Animation
         private RectTransform[] _visibleSymbolsOnReel;
         private int _lineCounter;
         private List<int[]> _winLines;
-        
+        private List<Sequence> _sequence;
+
+        private void Start()
+        {
+            _sequence = new List<Sequence>();
+        }
+
         public void WinAnim(List<int[]> winSymbolIndex)
         {
             _winLines = winSymbolIndex;
@@ -63,6 +69,7 @@ namespace Animation
 
             DOTween.Kill(currentSymbol);
             Sequence symbolSequence = DOTween.Sequence();
+            _sequence.Add(symbolSequence);
         
             currentParticle.gameObject.SetActive(true);
             currentParticle.Play();
@@ -107,7 +114,12 @@ namespace Animation
 
         public void ForceStopWinAnim()
         {
-            DOTween.KillAll();
+
+            foreach (var sequence in _sequence)
+            {
+                sequence?.Kill();
+            }
+            
             foreach (var reel in reels)
             {
                 foreach (var particle in reel.Particles)
@@ -118,12 +130,11 @@ namespace Animation
                 
                 foreach (var symbol in reel.VisibleSymbolsRTOnReel)
                 {
+                    DOTween.Kill(symbol);
                     symbol.GetComponent<Image>().DOFade(1f, 0.2f);
                     symbol.DOScale(Vector3.one, 0.2f);
                     symbol.DOMoveZ(0f, 0.2f);
                 }
-
-                
             }
         }
     }

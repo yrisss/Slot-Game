@@ -19,7 +19,6 @@ namespace Infastructure.Management
 
         private void Start()
         {
-            
             winAnimation.ONAnimationComplete += StopWinAnimation;
         }
 

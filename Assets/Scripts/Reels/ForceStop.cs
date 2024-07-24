@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using Infastructure.Management;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +15,9 @@ namespace Reels
         private AnimationManager _animationManager;
 
         private bool isForceStop;
-        
-        public ForceStop(ReelsScroll reelsScroll, RectTransform[] reelsRT, Dictionary<RectTransform, Reel> reelsDictionary, Button stopButton, AnimationManager animationManager)
+
+        public ForceStop(ReelsScroll reelsScroll, RectTransform[] reelsRT,
+            Dictionary<RectTransform, Reel> reelsDictionary, Button stopButton, AnimationManager animationManager)
         {
             _reelsScroll = reelsScroll;
             _reelsRT = reelsRT;
@@ -27,10 +29,11 @@ namespace Reels
         public bool StartForceStop()
         {
             isForceStop = false;
-            
+
             foreach (var reelRT in _reelsRT)
             {
-                if (_reelsDictionary[reelRT].ReelState == ReelState.Stop)
+                if (_reelsDictionary[reelRT].ReelID == _reelsRT.Length &&
+                    _reelsDictionary[reelRT].ReelState == ReelState.Stop)
                 {
                     _stopButton.interactable = false;
                     _animationManager.ForceStopWinAnimation(_reelsDictionary[reelRT].VisibleSymbolsRTOnReel);
@@ -38,25 +41,22 @@ namespace Reels
                 else
                 {
                     isForceStop = true;
-                    ForceScrollStop();
+                    ForceScrollStop(reelRT);
                 }
-
             }
 
             return isForceStop;
         }
 
-        private void ForceScrollStop()
+        private void ForceScrollStop(RectTransform reelRT)
         {
             _stopButton.interactable = false;
 
-            foreach (var reelRT in _reelsRT)
+            if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
             {
-                if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
-                {
-                    _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
-                    _reelsScroll.ReelCorrection(reelRT);
-                }
+                _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
+                DOTween.Kill(reelRT);
+                _reelsScroll.ReelCorrection(reelRT);
             }
         }
     }
