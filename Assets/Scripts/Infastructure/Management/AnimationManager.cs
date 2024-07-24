@@ -33,7 +33,7 @@ namespace Infastructure.Management
             ONWinAnimationComplete?.Invoke();
         }
 
-        public void ForceStopWinAnimation(RectTransform[] visibleSymbolsOnReel)
+        public void ForceStopWinAnimation()
         {
             winAnimation.ForceStopWinAnim();
             ONWinAnimationComplete?.Invoke();

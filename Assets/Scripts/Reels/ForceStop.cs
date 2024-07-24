@@ -32,32 +32,76 @@ namespace Reels
 
             foreach (var reelRT in _reelsRT)
             {
-                if (_reelsDictionary[reelRT].ReelID == _reelsRT.Length &&
-                    _reelsDictionary[reelRT].ReelState == ReelState.Stop)
+                if (_reelsDictionary[reelRT].ReelID == _reelsRT.Length)
                 {
-                    _stopButton.interactable = false;
-                    _animationManager.ForceStopWinAnimation(_reelsDictionary[reelRT].VisibleSymbolsRTOnReel);
-                }
-                else
-                {
-                    isForceStop = true;
-                    ForceScrollStop(reelRT);
+                    if (_reelsDictionary[reelRT].ReelState == ReelState.Stop)
+                    {
+                        ForceAnimStop();
+                    }
+                    
+                    else
+                    {
+                        isForceStop = true;
+                        ForceScrollStop();
+                    }
                 }
             }
+
 
             return isForceStop;
         }
 
-        private void ForceScrollStop(RectTransform reelRT)
+        private void ForceAnimStop()
+        {
+            _stopButton.interactable = false;
+            _animationManager.ForceStopWinAnimation();
+        }
+        
+        private void ForceScrollStop()
         {
             _stopButton.interactable = false;
 
-            if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
+            foreach (var reelRT in _reelsRT)
             {
-                _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
-                DOTween.Kill(reelRT);
-                _reelsScroll.ReelCorrection(reelRT);
+                if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
+                {
+                    _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
+                    // DOTween.Kill(reelRT);
+                    _reelsScroll.ReelCorrection(reelRT);
+                }
             }
         }
+        //
+        // public void ForceStop()
+        // {
+        //     foreach (var reelRT in reelsRT)
+        //     {
+        //         if (_reelsDictionary[reelRT].ReelState == ReelState.Stop)
+        //         {
+        //             stopButton.interactable = false;
+        //             animationManager.ForceStopWinAnimation(_reelsDictionary[reelRT].VisibleSymbolsRTOnReel);
+        //         }
+        //         else
+        //         {
+        //             isForceStop = true;
+        //             ForceScrollStop();
+        //         }
+        //
+        //     }
+        // }
+        //
+        // private void ForceScrollStop()
+        // {
+        //     stopButton.interactable = false;
+        //
+        //     foreach (var reelRT in reelsRT)
+        //     {
+        //         if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
+        //         {
+        //             _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
+        //             ReelCorrection(reelRT);
+        //         }
+        //     }
+        // }
     }
 }

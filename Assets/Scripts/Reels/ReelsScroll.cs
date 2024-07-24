@@ -186,49 +186,25 @@ namespace Reels
 
             _reelsDictionary[reelRT].ResetSymbolPosition(traveledDistance);
 
-           if(_reelsDictionary[reelRT].ReelID == reels.Length) 
-            FinishGame(reelRT);
+            if(_reelsDictionary[reelRT].ReelID == reels.Length) 
+                FinishScroll(reelRT);
         }
 
-
-        private void FinishGame(RectTransform reelRT)
+        private void FinishScroll(RectTransform reelRT)
         {
-            if (isFreeSpinGame)
+            soundManager.StopMusic(SoundType.ScrollingSound);
+
+            if (!_freeSpinGame.TryStartFreeSpins(reelRT))
             {
+                animationManager.ONWinAnimationComplete = null;
+                animationManager.ONWinAnimationComplete += animationManager.StartChangeBalanceAnimation;
+                animationManager.ONWinAnimationComplete += ShowPlayButton;
                 _trueWinLines = winChecker.CheckResult();
                 if (_trueWinLines.Count != 0)
                 {
                     HidePlayButton();
                     animationManager.StartWinAnimation(_trueWinLines);
                 }
-            }
-
-            else
-            {
-                isFreeSpinGame = _freeSpinGame.TryStartFreeSpins(reelRT);
-                
-                if (isFreeSpinGame)
-                {
-                    animationManager.ONWinAnimationComplete = null;
-                    _freeSpinGame.StartFreeSpin();
-                    return;
-                }
-            }
-            
-            animationManager.ONWinAnimationComplete = null;
-            animationManager.ONWinAnimationComplete += animationManager.StartChangeBalanceAnimation;
-            animationManager.ONWinAnimationComplete += ShowPlayButton;
-            
-            _trueWinLines = winChecker.CheckResult();
-            if (_trueWinLines.Count != 0)
-            {
-                HidePlayButton();
-                animationManager.StartWinAnimation(_trueWinLines);
-            }
-            else
-            {
-                animationManager.ONWinAnimationComplete = null;
-                ShowPlayButton();
             }
         }
 
