@@ -20,15 +20,17 @@ namespace Animation
         private RectTransform[] _visibleSymbolsOnReel;
         private int _lineCounter;
         private List<int[]> _winLines;
-        private List<Sequence> _sequence;
+        private List<Sequence> _symbolSequence;
+        private List<Sequence> _sequences;
 
         private void Start()
         {
-            _sequence = new List<Sequence>();
+            _symbolSequence = new List<Sequence>();
         }
 
         public void WinAnim(List<int[]> winSymbolIndex)
         {
+            _symbolSequence.Clear();
             _winLines = winSymbolIndex;
             _lineCounter = 0;
             if (winSymbolIndex.Count > 0)
@@ -69,17 +71,17 @@ namespace Animation
 
             DOTween.Kill(currentSymbol);
             Sequence symbolSequence = DOTween.Sequence();
-            _sequence.Add(symbolSequence);
+            _symbolSequence.Add(symbolSequence);
         
             currentParticle.gameObject.SetActive(true);
             currentParticle.Play();
 
             symbolSequence
-                .Append(currentSymbol.DOMoveZ(-10f, 1f))
-                .Append(currentSymbol.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).SetLoops(6, LoopType.Yoyo))
-                .Append(currentSymbol.DOMoveZ(0f, 1f));
+                //.Append(currentSymbol.DOMoveZ(-10f, 1f))
+                .Append(currentSymbol.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).SetLoops(6, LoopType.Yoyo));
+               // .Append(currentSymbol.DOMoveZ(0f, 1f));
 
-            DOTween.Sequence().AppendInterval(4f).OnComplete(() =>
+            symbolSequence.OnComplete(() =>
             {
                 currentParticle.gameObject.SetActive(false);
                 currentParticle.Stop();
@@ -114,8 +116,7 @@ namespace Animation
 
         public void ForceStopWinAnim()
         {
-
-            foreach (var sequence in _sequence)
+            foreach (var sequence in _symbolSequence)
             {
                 sequence?.Kill();
             }
@@ -127,7 +128,7 @@ namespace Animation
                     particle.Stop();
                     particle.gameObject.SetActive(false);
                 }
-                
+
                 foreach (var symbol in reel.VisibleSymbolsRTOnReel)
                 {
                     DOTween.Kill(symbol);

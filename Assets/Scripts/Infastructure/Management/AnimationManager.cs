@@ -30,12 +30,14 @@ namespace Infastructure.Management
 
         private void StopWinAnimation()
         {
+            Debug.Log("Stop win Anim");
             ONWinAnimationComplete?.Invoke();
         }
 
         public void ForceStopWinAnimation()
         {
             winAnimation.ForceStopWinAnim();
+            Debug.Log("Force stop win anim");
             ONWinAnimationComplete?.Invoke();
         }
         
