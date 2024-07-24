@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Animation;
+using Reels;
 using UnityEngine;
 
 namespace Infastructure.Management
@@ -18,6 +19,7 @@ namespace Infastructure.Management
 
         private void Start()
         {
+            
             winAnimation.ONAnimationComplete += StopWinAnimation;
         }
 
@@ -43,9 +45,10 @@ namespace Infastructure.Management
             StartCoroutine(changeBalanceAnimation.ChangeBalance());
         }
 
-        public void StartAnticipationAnimation(float duration)
+        public void StartAnticipationAnimation(Reel reel, RectTransform reelRT, float duration)
         {
-            anticipationAnimation.StartAnticipationAnim(duration);
+            anticipationAnimation = reel.AnticipationAnimation;
+            anticipationAnimation.StartAnticipationAnim(reel, reelRT, duration);
         }
 
         public void StopAnticipationAnimation()

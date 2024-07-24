@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Coffee.UIExtensions;
 using DG.Tweening;
 using Infastructure.Management;
+using Reels;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,19 +13,19 @@ namespace Animation
     {
         [SerializeField] private Image fade;
         [SerializeField] private Image frame;
-        [SerializeField] private List<UIParticle> antisipationParticle;
-        [SerializeField] private RectTransform reel;
+       // [SerializeField] private List<UIParticle> antisipationParticle;
+       // [SerializeField] private RectTransform reel;
         [SerializeField] private SoundManager soundManager;
 
-        public void StartAnticipationAnim(float duration)
+        public void StartAnticipationAnim(Reel reel, RectTransform reelRT, float duration)
         {
             soundManager.PlayMusic(SoundType.AntisipationMusic);
-            var position = reel.position;
+            var position = reelRT.position;
             position = new Vector3(position.x, position.y, 1);
-            reel.position = position;
+            reelRT.position = position;
             
                 fade.rectTransform.DOScale(Vector3.one, 0f);
-                foreach (var particle in antisipationParticle)
+                foreach (var particle in reel.AntisipationParticles)
                 {
                     particle.gameObject.SetActive(true);
                     particle.Play();
@@ -33,18 +34,18 @@ namespace Animation
                 fade.rectTransform.DOScale(Vector3.one, 0f);
                 fade.DOFade(0.83f, duration/2);
                 frame.DOFade(1f, duration/2);
-                StartCoroutine(StopAnticipationAnim(duration));
+                StartCoroutine(StopAnticipationAnim(reel, reelRT, duration));
         }
 
-        private IEnumerator StopAnticipationAnim(float duration)
+        private IEnumerator StopAnticipationAnim(Reel reel, RectTransform reelRT, float duration)
         {
             yield return new WaitForSeconds(duration);
             
-            var position = reel.position;
+            var position = reelRT.position;
             position = new Vector3(position.x, position.y, 0);
-            reel.position = position;
+            reelRT.position = position;
             
-            foreach (var particle in antisipationParticle)
+            foreach (var particle in reel.AntisipationParticles)
             {
                 particle.gameObject.SetActive(false);
                 particle.Stop();

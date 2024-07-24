@@ -1,3 +1,4 @@
+using Animation;
 using Coffee.UIExtensions;
 using Data;
 using Infastructure.Services;
@@ -14,7 +15,8 @@ namespace Reels
         [SerializeField] private RectTransform[] visibleSymbolsRT;
         [SerializeField] private Symbol[] visibleSymbols;
         [SerializeField] private UIParticle[] particles;
-        
+        [SerializeField] private UIParticle[] antisipationParticles;
+        [SerializeField] private AnticipationAnimation antisipationAnimation;
         [SerializeField] private RectTransform mainCanvasRT;
 
         [SerializeField] private int reelID;
@@ -39,9 +41,13 @@ namespace Reels
         public RectTransform[] VisibleSymbolsRTOnReel => visibleSymbolsRT;
         public Symbol[] VisibleSymbols => visibleSymbols;
         public UIParticle[] Particles => particles;
+
+        public UIParticle[] AntisipationParticles => antisipationParticles;
+
+        public AnticipationAnimation AnticipationAnimation => antisipationAnimation;
         
         public float SymbolHeight => _symbolHeight;
-        public float ReelID => reelID;
+        public int ReelID => reelID;
     
         private void Start()
         {

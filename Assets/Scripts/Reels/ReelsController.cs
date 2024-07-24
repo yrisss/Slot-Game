@@ -38,9 +38,14 @@ namespace Reels
         [Header("Antisipation")] [SerializeField]
         private RectTransform antisipationReelRT;
 
-        [SerializeField] private float antisipationDistance, antisipationDuration;
+        [SerializeField] private float prepareAntisipationSpeed;
+        [SerializeField] private float prepareAntisipationDuration;
+
+        [SerializeField] private float antisipationSpeed, antisipationDuration;
         [SerializeField] private int freeSpinsCount;
         private int _freeSpinsCounter;
+        private float _prepareAntisipationDistance;
+        private float _antisipationDistance;
 
 
         [Header("Infrastructure")] [SerializeField]
@@ -64,6 +69,8 @@ namespace Reels
         {
             _linearDistance = linearSpeed * linearDuration;
             _boostDistance = boostSpeed * boostDuration;
+            _antisipationDistance = antisipationSpeed * antisipationDuration;
+            _prepareAntisipationDistance = prepareAntisipationSpeed * prepareAntisipationDuration;
             stopButton.interactable = false;
             stopButtonRT.localScale = Vector3.zero;
             _reelStartPositionY = reelsRT[0].localPosition.y;
@@ -166,10 +173,10 @@ namespace Reels
 
                             _reelsDictionary[reelRT].ReelState = ReelState.Stop;
                             PrepareReel(reelRT);
-
-                            if (_reelsDictionary[reelRT].ReelID == reelsRT.Length - 1 && !isFreeSpin)
+                            
+                            if (_reelsDictionary[reelRT].ReelID == 2 && !isFreeSpin)
                             {
-                                TryStartAntisipation(reelRT);
+                                TryStartAntisipation(_reelsDictionary[reelRT].ReelID + 1);
                             }
                         });
                 }
@@ -214,12 +221,14 @@ namespace Reels
 
                 #region Antisipation
 
-                private void TryStartAntisipation(RectTransform reelRT)
+                private void TryStartAntisipation(int AntisipationReelID)
                 {
+                    var currentReelIndex = AntisipationReelID - 1;
+                    
                     if (isForceStop == true)
                         return;
                     var isAntisipation = true;
-                    for (int i = 0; i < reels.Length - 1; i++)
+                    for (int i = 0; i < currentReelIndex; i++)
                     {
                         if (scatterChecker.CheckAnticipation(reels[i]) <= 0)
                         {
@@ -228,17 +237,68 @@ namespace Reels
                     }
 
                     if (!isAntisipation) return;
-                    animationManager.StartAnticipationAnimation(antisipationDuration);
-                    AntisipationScroll();
+                    AntisipationScroll(currentReelIndex);
                 }
 
-                private void AntisipationScroll()
+                
+                private void AntisipationScroll(int currentReelIndex)
                 {
-                    _reelsDictionary[antisipationReelRT].ReelState = ReelState.Spin;
-                    DOTween.Kill(antisipationReelRT);
-                    antisipationReelRT.DOAnchorPosY(antisipationReelRT.localPosition.y * 2, antisipationDuration)
+                    
+                    bool lastReel = currentReelIndex + 1 == reels.Length;
+
+                    var currentReelRT = reelsRT[currentReelIndex];
+                    var currentReel = reels[currentReelIndex];
+                    
+                    animationManager.StartAnticipationAnimation(currentReel, currentReelRT, antisipationDuration);
+                    AntisipationReelScroll(currentReelIndex, currentReelRT);
+
+                    if (lastReel)
+                        return;
+                    for (int i = currentReelIndex + 1; i < reelsRT.Length; i++)
+                    {
+                        PrepareAntisipationScroll(reelsRT[i]);
+                    }
+                }
+
+                private void AntisipationReelScroll(int currentReelIndex, RectTransform currentReelRT)
+                {
+                    _reelsDictionary[currentReelRT].ReelState = ReelState.Spin;
+                    DOTween.Kill(currentReelRT);
+                    currentReelRT.DOAnchorPosY(currentReelRT.localPosition.y + _antisipationDistance, antisipationDuration)
                         .SetEase(Ease.Linear)
-                        .OnComplete(() => ReelCorrection(antisipationReelRT));
+                        .OnComplete(() => FreeSpinsCheck(currentReelIndex));
+                }
+
+                private void PrepareAntisipationScroll(RectTransform reelRT)
+                {
+                    _reelsDictionary[reelRT].ReelState = ReelState.Spin;
+                    DOTween.Kill(reelRT);
+                    reelRT.DOAnchorPosY(reelRT.localPosition.y + _prepareAntisipationDistance,
+                            prepareAntisipationDuration)
+                        .SetEase(Ease.Linear)
+                    .OnComplete(() => ReelCorrection(reelRT));
+                }
+
+                private void FreeSpinsCheck(int currentReelIndex)
+                {
+                    if (scatterChecker.FreeSpinsChecker(currentReelIndex) >= 3)
+                    {
+                        for (int i = currentReelIndex; i < reelsRT.Length; i++)
+                        {
+                            ReelCorrection(reelsRT[i]);
+                        }
+                    }
+                    else
+                    {
+                        ReelCorrection(reelsRT[currentReelIndex]);
+                        if (currentReelIndex + 1 == reels.Length)
+                        {
+                            Debug.Log(currentReelIndex + " Last Reel");
+                            return;
+                        }
+
+                        AntisipationScroll(currentReelIndex + 1);
+                    }
                 }
 
                 #endregion
@@ -273,7 +333,7 @@ namespace Reels
                                 animationManager.StartWinAnimation(_trueWinLines);
                             }
                         }
-                        else if (scatterChecker.FreeSpinsChecker() >= 3 && !isFreeSpin)
+                        else if (scatterChecker.FreeSpinsChecker(_reelsDictionary[reelRT].ReelID - 1) >= 3 && !isFreeSpin)
                         {
                             soundManager.StopMusic(SoundType.BackMusic);
                             soundManager.PlayMusic(SoundType.FreeSpinsMusic);

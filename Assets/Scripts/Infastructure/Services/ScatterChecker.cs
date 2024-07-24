@@ -31,16 +31,15 @@ namespace Infastructure.Services
             return _scattersOnReel;
         }
 
-        public int FreeSpinsChecker()
+        public int FreeSpinsChecker(int currentReelIndex)
         {
             _scattersOnReel = 0;
 
-            foreach (var reel in reels)
+            for (int i = 0; i <= currentReelIndex; i++)
             {
-
-                for (int i = 0; i < reel.VisibleSymbolsRTOnReel.Length; i++)
+                for (int j = 0; j < reels[i].VisibleSymbolsRTOnReel.Length; j++)
                 {
-                    if (reel.VisibleSymbols[i].SymbolInfo.Type == SymbolType.Scatter)
+                    if (reels[i].VisibleSymbols[j].SymbolInfo.Type == SymbolType.Scatter)
                         _scattersOnReel++;
                 }
             }
