@@ -20821,7 +20821,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &345128835821968786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20869,6 +20869,8 @@ MonoBehaviour:
   - {fileID: 6687202022946343624}
   - {fileID: 8207373324250137388}
   - {fileID: 9061259746444316539}
+  antisipationParticles: []
+  antisipationAnimation: {fileID: 0}
   mainCanvasRT: {fileID: 0}
   reelID: 3
   exitPosition: 387
@@ -25825,12 +25827,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fade: {fileID: 0}
   frame: {fileID: 3435490830731789407}
-  antisipationParticle:
-  - {fileID: 856288304792029599}
-  - {fileID: 1362712218196257181}
-  - {fileID: 5595428382674854553}
-  - {fileID: 2996190195636268684}
-  reel: {fileID: 2512417845250201460}
   soundManager: {fileID: 0}
 --- !u!1 &7677972153420112490
 GameObject:
