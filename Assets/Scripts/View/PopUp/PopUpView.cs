@@ -16,25 +16,20 @@ namespace View.PopUp
         [SerializeField] private TextMeshProUGUI balanceText; 
         
 
-        public void ShowWinPopUp(int startBalance, AnimationManager animationManager)
+        public void ShowWinPopUp(AnimationManager animationManager)
         {
-            int totalWin = PlayerPrefs.GetInt("Balance", 0) - startBalance;
+            int totalWin = PlayerPrefs.GetInt("TotalWinBalance", 0);
             totalWinText.text = totalWin + " $";
             ShowPopUp(totalWinPopUp);
             StartCoroutine(HideWinPopUp(totalWinPopUp, animationManager));
         }
 
-        public void ShowBonusGamePopUp(int freeSpinsCounter)
+        public void ShowBonusGamePopUp()
         {
-            ChangeFreeSpinsCount(freeSpinsCounter);
             ShowPopUp(bonusGamePopUp);
             StartCoroutine(HideBonusPopUp(bonusGamePopUp));
         }
-
-        public void ChangeFreeSpinsCount(int freeSpinsCounter)
-        {
-            balanceText.text = freeSpinsCounter + " FS";
-        }
+        
 
         private void ShowPopUp(RectTransform popup)
         {
@@ -49,7 +44,11 @@ namespace View.PopUp
 
             fade.DOFade(0f, 0.5f);
             fade.rectTransform.DOScale(Vector3.zero, 0f);
-            popup.DOScale(Vector3.zero, 0.5f).OnComplete(() => animationManager.StartChangeBalanceAnimation());
+            popup.DOScale(Vector3.zero, 0.5f).OnComplete(() =>
+            {
+                animationManager.ONWinAnimationComplete = null;
+                animationManager.StartChangeBalanceAnimation();
+            });
         }
 
         private IEnumerator HideBonusPopUp(RectTransform popup)

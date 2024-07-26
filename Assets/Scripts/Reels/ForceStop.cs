@@ -66,42 +66,9 @@ namespace Reels
                 if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
                 {
                     _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
-                    // DOTween.Kill(reelRT);
                     _reelsScroll.ReelCorrection(reelRT);
                 }
             }
         }
-        //
-        // public void ForceStop()
-        // {
-        //     foreach (var reelRT in reelsRT)
-        //     {
-        //         if (_reelsDictionary[reelRT].ReelState == ReelState.Stop)
-        //         {
-        //             stopButton.interactable = false;
-        //             animationManager.ForceStopWinAnimation(_reelsDictionary[reelRT].VisibleSymbolsRTOnReel);
-        //         }
-        //         else
-        //         {
-        //             isForceStop = true;
-        //             ForceScrollStop();
-        //         }
-        //
-        //     }
-        // }
-        //
-        // private void ForceScrollStop()
-        // {
-        //     stopButton.interactable = false;
-        //
-        //     foreach (var reelRT in reelsRT)
-        //     {
-        //         if (_reelsDictionary[reelRT].ReelState == ReelState.Spin)
-        //         {
-        //             _reelsDictionary[reelRT].ReelState = ReelState.ForceStopping;
-        //             ReelCorrection(reelRT);
-        //         }
-        //     }
-        // }
     }
 }

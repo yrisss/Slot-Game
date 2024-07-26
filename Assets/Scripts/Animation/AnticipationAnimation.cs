@@ -17,7 +17,7 @@ namespace Animation
        // [SerializeField] private RectTransform reel;
         [SerializeField] private SoundManager soundManager;
 
-        public void StartAnticipationAnim(Reel reel, RectTransform reelRT, float duration)
+        public void StartAnticipationAnim(Reel[] reels, Reel reel, RectTransform reelRT, int currentReelIndex, float duration)
         {
             soundManager.PlayMusic(SoundType.AntisipationMusic);
             var position = reelRT.position;
@@ -25,6 +25,19 @@ namespace Animation
             reelRT.position = position;
             
                 fade.rectTransform.DOScale(Vector3.one, 0f);
+                
+                for (int i = currentReelIndex + 1; i < reels.Length; i++)
+                {
+                    foreach (var symbol in reels[i].VisibleSymbolsRTOnReel)
+                    {
+                        Image symbolImage = symbol.GetComponent<Image>();
+                        if (symbolImage != null)
+                        {
+                            symbolImage.DOFade(0.23f, 0f);
+                        }
+                    }
+                }
+                
                 foreach (var particle in reel.AntisipationParticles)
                 {
                     particle.gameObject.SetActive(true);
@@ -34,16 +47,28 @@ namespace Animation
                 fade.rectTransform.DOScale(Vector3.one, 0f);
                 fade.DOFade(0.83f, duration/2);
                 frame.DOFade(1f, duration/2);
-                StartCoroutine(StopAnticipationAnim(reel, reelRT, duration));
+                StartCoroutine(StopAnticipationAnim(reels, reel, reelRT, currentReelIndex, duration));
         }
 
-        private IEnumerator StopAnticipationAnim(Reel reel, RectTransform reelRT, float duration)
+        private IEnumerator StopAnticipationAnim(Reel[] reels, Reel reel, RectTransform reelRT, int currentReelIndex, float duration)
         {
             yield return new WaitForSeconds(duration);
             
             var position = reelRT.position;
             position = new Vector3(position.x, position.y, 0);
             reelRT.position = position;
+            
+            for (int i = currentReelIndex + 1; i < reels.Length; i++)
+            {
+                foreach (var symbol in reels[i].VisibleSymbolsRTOnReel)
+                {
+                    Image symbolImage = symbol.GetComponent<Image>();
+                    if (symbolImage != null)
+                    {
+                        symbolImage.DOFade(1f, 0.5f);
+                    }
+                }
+            }
             
             foreach (var particle in reel.AntisipationParticles)
             {

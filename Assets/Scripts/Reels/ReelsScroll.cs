@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -22,6 +23,8 @@ namespace Reels
         [SerializeField] private Button stopButton;
         [SerializeField] private RectTransform stopButtonRT;
 
+        [SerializeField] private RectTransform freeSpinsCountFrameRT;
+
         [Header("Spin Parameters")] [SerializeField]
         private float delay;
 
@@ -31,6 +34,8 @@ namespace Reels
         [SerializeField] private float boostDuration, linearDuration, stoppingDuration;
         private float _boostDistance;
         private float _linearDistance;
+
+        public event Action ONScrollStop;
 
 
         [Space] [SerializeField] private int visibleSymbolsOnReel;
@@ -68,14 +73,14 @@ namespace Reels
         private AntisipationScroll _antisipationScroll;
         private ForceStop _forceStop;
         private FreeSpinGame _freeSpinGame;
-
+        
         private void Start()
         {
             _linearDistance = linearSpeed * linearDuration;
             _boostDistance = boostSpeed * boostDuration;
             _antisipationDistance = antisipationSpeed * antisipationDuration;
             _prepareAntisipationDistance = prepareAntisipationSpeed * prepareAntisipationDuration;
-
+            
             stopButton.interactable = false;
             stopButtonRT.localScale = Vector3.zero;
             _reelStartPositionY = reelsRT[0].localPosition.y;
@@ -93,7 +98,7 @@ namespace Reels
             _forceStop = new ForceStop(this, reelsRT, _reelsDictionary, stopButton, animationManager);
 
             _freeSpinGame = new FreeSpinGame(this, reelsRT, _reelsDictionary, stopButton, freeSpinsCount, popUpView,
-                animationManager, soundManager, winChecker, scatterChecker);
+                animationManager, soundManager, winChecker, scatterChecker, freeSpinsCountFrameRT);
         }
 
         public void ScrollStart()
@@ -143,7 +148,7 @@ namespace Reels
             reelRT.DOAnchorPosY(correctionDistance, correctionDuration)
                 .OnComplete(() => ScrollStop(reelRT));
         }
-
+        
         private void ScrollStop(RectTransform reelRT)
         {
             _reelsDictionary[reelRT].ReelState = ReelState.Stopping;
@@ -160,11 +165,17 @@ namespace Reels
                     }
 
                     _reelsDictionary[reelRT].ReelState = ReelState.Stop;
+                    
+                    soundManager.PlaySound(SoundType.StopScrollingSound);
                     PrepareReel(reelRT);
-
+                    
                     if (_reelsDictionary[reelRT].ReelID == 2 && !isFreeSpinGame)
                     {
                         _antisipationScroll.TryStartAntisipation(_reelsDictionary[reelRT].ReelID + 1, isForceStop);
+                    }
+                    else if (_reelsDictionary[reelRT].ReelID >= 2 && !isFreeSpinGame)
+                    {
+                        ONScrollStop?.Invoke();
                     }
                 });
         }
@@ -185,7 +196,7 @@ namespace Reels
             reelRT.localPosition = new Vector3(reelRT.localPosition.x, _reelStartPositionY);
 
             _reelsDictionary[reelRT].ResetSymbolPosition(traveledDistance);
-
+            
             if(_reelsDictionary[reelRT].ReelID == reels.Length) 
                 FinishScroll(reelRT);
         }
@@ -193,7 +204,7 @@ namespace Reels
         private void FinishScroll(RectTransform reelRT)
         {
             soundManager.StopMusic(SoundType.ScrollingSound);
-
+            
             if (!_freeSpinGame.TryStartFreeSpins(reelRT))
             {
                 animationManager.ONWinAnimationComplete = null;
@@ -204,6 +215,10 @@ namespace Reels
                 {
                     HidePlayButton();
                     animationManager.StartWinAnimation(_trueWinLines);
+                }
+                else
+                {
+                    ShowPlayButton();
                 }
             }
         }

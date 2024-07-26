@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   finalScreens:
   - {fileID: 11400000, guid: 3de81c67fe5af7447a4bfaa0f15ab402, type: 2}
+  - {fileID: 11400000, guid: c171fc971854d804b94251440f17006b, type: 2}
   - {fileID: 11400000, guid: 060f1d0e3314f0749989faadb52875ee, type: 2}
   - {fileID: 11400000, guid: 511b4234176da6b4db805d22716167be, type: 2}
   - {fileID: 11400000, guid: a1d7269f623fc3c4b8f879b959924e43, type: 2}
   - {fileID: 11400000, guid: 47a9e35093c79e14e8525a4c4461178f, type: 2}
+  - {fileID: 11400000, guid: 09c2e2ca27ced184d9d70cff7acd1273, type: 2}
   symbolData:
   - {fileID: 11400000, guid: 68371e5d3c819834d897564bd3cf458c, type: 2}
   - {fileID: 11400000, guid: 2f151dfcc4e43354484e272406bef85f, type: 2}

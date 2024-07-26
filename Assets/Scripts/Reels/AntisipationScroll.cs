@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Infastructure.Management;
@@ -15,14 +16,18 @@ namespace Reels
         private AnimationManager _animationManager;
         private Dictionary<RectTransform, Reel> _reelsDictionary;
 
+        private int currentReelIndex = 0;
 
         private float _antisipationDistance;
         private float _antisipationDuration;
         private float _prepareAntisipationDistance;
         private float _prepareAntisipationDuration;
 
-        public AntisipationScroll(ReelsScroll reelScroll, Reel[] reels, RectTransform[] reelsRT, ScatterChecker scatterChecker, AnimationManager animationManager, Dictionary<RectTransform, Reel> reelsDictionary,
-                                    float antisipationDistance, float antisipationDuration, float prepareAntisipationDistance, float prepareAntisipationDuration)
+        public AntisipationScroll(ReelsScroll reelScroll, Reel[] reels, RectTransform[] reelsRT,
+            ScatterChecker scatterChecker, AnimationManager animationManager,
+            Dictionary<RectTransform, Reel> reelsDictionary,
+            float antisipationDistance, float antisipationDuration, float prepareAntisipationDistance,
+            float prepareAntisipationDuration)
         {
             _reelScroll = reelScroll;
             _reels = reels;
@@ -38,8 +43,8 @@ namespace Reels
 
 
         public void TryStartAntisipation(int AntisipationReelID, bool isForceStop)
-        {
-            var currentReelIndex = AntisipationReelID - 1;
+        { 
+            currentReelIndex = AntisipationReelID - 1;
 
             if (isForceStop == true)
                 return;
@@ -60,13 +65,13 @@ namespace Reels
         private void StartAntisipationScroll(int currentReelIndex)
         {
             bool lastReel = currentReelIndex + 1 == _reels.Length;
-            
+
             var currentReelRT = _reelsRT[currentReelIndex];
             var currentReel = _reels[currentReelIndex];
-            
-            _animationManager.StartAnticipationAnimation(currentReel, currentReelRT, _antisipationDuration);
+
+            _animationManager.StartAnticipationAnimation(_reels, currentReel, currentReelRT, currentReelIndex, _antisipationDuration);
             AntisipationReelScroll(currentReelIndex, currentReelRT);
-            
+
             if (lastReel)
                 return;
             for (int i = currentReelIndex + 1; i < _reelsRT.Length; i++)
@@ -81,7 +86,11 @@ namespace Reels
             DOTween.Kill(currentReelRT);
             currentReelRT.DOAnchorPosY(currentReelRT.localPosition.y + _antisipationDistance, _antisipationDuration)
                 .SetEase(Ease.Linear)
-                .OnComplete(() => FreeSpinsCheck(currentReelIndex));
+                .OnComplete(() =>
+                {
+                    _reelScroll.ReelCorrection(currentReelRT);
+                    _reelScroll.ONScrollStop += FreeSpinsCheck;
+                });
         }
 
         private void PrepareAntisipationScroll(RectTransform reelRT)
@@ -94,25 +103,27 @@ namespace Reels
                 .OnComplete(() => _reelScroll.ReelCorrection(reelRT));
         }
 
-        private void FreeSpinsCheck(int currentReelIndex)
+        private void FreeSpinsCheck()
         {
+            _reelScroll.ONScrollStop -= FreeSpinsCheck;
             if (_scatterChecker.FreeSpinsChecker(currentReelIndex) >= 3)
             {
-                for (int i = currentReelIndex; i < _reelsRT.Length; i++)
+                _reelScroll.isFreeSpinGame = true;
+                for (int i = currentReelIndex + 1; i < _reelsRT.Length; i++)
                 {
                     _reelScroll.ReelCorrection(_reelsRT[i]);
                 }
             }
             else
             {
-                _reelScroll.ReelCorrection(_reelsRT[currentReelIndex]);
+                _reelScroll.isFreeSpinGame = false;
                 if (currentReelIndex + 1 == _reels.Length)
                 {
-                    Debug.Log(currentReelIndex + " Last Reel");
                     return;
                 }
 
-                StartAntisipationScroll(currentReelIndex + 1);
+                currentReelIndex++;
+                StartAntisipationScroll(currentReelIndex);
             }
         }
     }

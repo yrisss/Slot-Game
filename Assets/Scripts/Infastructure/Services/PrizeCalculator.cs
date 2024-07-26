@@ -10,7 +10,6 @@ namespace Infastructure.Services
 
       private int _startBalance;
       private int _totalWin;
-      private int _newBalance;
 
       public void PrizeCalculate(List<int> winSymbolsCost)
       {
@@ -20,12 +19,9 @@ namespace Infastructure.Services
          {
             _totalWin += winSymbolCost * 3;
          }
-
-         _newBalance = _startBalance + _totalWin;
-
-         //Debug.Log(_totalWin + " " + _newBalance);
-         PlayerPrefs.SetInt("Balance", _newBalance);
-         changeBalanceAnimation.SetValues(_startBalance, _newBalance);
+         
+         changeBalanceAnimation.SetValues(_startBalance, _totalWin);
+         changeBalanceAnimation.ChangeTotalWinBalance();
       }
    }
 }

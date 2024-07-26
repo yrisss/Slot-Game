@@ -43,7 +43,7 @@ namespace Infastructure.Services
                         _scattersOnReel++;
                 }
             }
-
+            
             return _scattersOnReel;
         }
     }

@@ -15,6 +15,7 @@ namespace Infastructure.Management
         [SerializeField] private AudioClip clickButtonSound;
         [SerializeField] private AudioClip scatterSound;
         [SerializeField] private AudioClip winLineSound;
+        [SerializeField] private AudioClip stopScrollinggSound;
 
     
         private AudioSource _source;
@@ -29,6 +30,7 @@ namespace Infastructure.Management
                 {SoundType.ClickButtonSound, clickButtonSound},
                 {SoundType.ScatterSound, scatterSound},
                 {SoundType.WinLineSound, winLineSound},
+                {SoundType.StopScrollingSound, stopScrollinggSound},
             };
         
             _sources = new Dictionary<SoundType, AudioSource>()
@@ -61,7 +63,6 @@ namespace Infastructure.Management
 
         private void PlaySound(AudioClip clip)
         {
-            _source.Stop();
             _source.PlayOneShot(clip);
         }
 
@@ -82,6 +83,7 @@ namespace Infastructure.Management
         ChangeBalanceSound,
         ScatterSound,
         WinLineSound,
-        ScrollingSound
+        ScrollingSound,
+        StopScrollingSound
     }
 }

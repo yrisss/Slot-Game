@@ -8,11 +8,15 @@ namespace View
     {
         [SerializeField] private SlotsGameData slotsGameData;
         [SerializeField] private TextMeshProUGUI balance;
+
+        private MainCanvas currentSlotCanvas;
+        private GameObject currentSlotObject;
         
         public void LoadSlot(int index)
         {
-            Instantiate(slotsGameData.SlotsGame[index]);
-            UpdateBalance();
+            currentSlotObject = Instantiate(slotsGameData.SlotsGame[index]);
+            currentSlotCanvas = currentSlotObject.GetComponent<MainCanvas>();
+            currentSlotCanvas.ONExit += UpdateBalance;
         }
 
         private void Start()

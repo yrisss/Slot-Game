@@ -16,6 +16,8 @@ namespace Animation
         public Action ONAnimationComplete;
         [SerializeField] private Reel[] reels;
         [SerializeField] private SoundManager soundManager;
+
+        public bool IsAnimationComplete;
         
         private RectTransform[] _visibleSymbolsOnReel;
         private int _lineCounter;
@@ -25,11 +27,13 @@ namespace Animation
 
         private void Start()
         {
+            IsAnimationComplete = false;
             _symbolSequence = new List<Sequence>();
         }
 
         public void WinAnim(List<int[]> winSymbolIndex)
         {
+            IsAnimationComplete = false;
             _symbolSequence.Clear();
             _winLines = winSymbolIndex;
             _lineCounter = 0;
@@ -110,6 +114,7 @@ namespace Animation
             }
             else
             {
+                IsAnimationComplete = true;
                 ONAnimationComplete?.Invoke();
             }
         }
@@ -128,11 +133,16 @@ namespace Animation
                     particle.Stop();
                     particle.gameObject.SetActive(false);
                 }
-
+                
                 foreach (var symbol in reel.VisibleSymbolsRTOnReel)
                 {
+                    Image symbolImage = symbol.GetComponent<Image>();
+                    if (symbolImage != null)
+                    {
+                        symbolImage.DOKill();
+                        symbolImage.DOFade(1f, 0.3f);
+                    }
                     DOTween.Kill(symbol);
-                    symbol.GetComponent<Image>().DOFade(1f, 0.2f);
                     symbol.DOScale(Vector3.one, 0.2f);
                     symbol.DOMoveZ(0f, 0.2f);
                 }

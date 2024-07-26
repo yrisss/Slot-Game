@@ -4,11 +4,11 @@ namespace View
 {
     public class ExitButton : MonoBehaviour
     {
-        [SerializeField] private GameObject slot;
-
+        [SerializeField] private MainCanvas slot;
+        
         public void Exit()
         {
-            Destroy(slot);
+            slot.Exit();
         }
     }
 }

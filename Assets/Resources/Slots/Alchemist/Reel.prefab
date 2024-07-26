@@ -20498,7 +20498,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5659055165132673430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30667,6 +30667,7 @@ MonoBehaviour:
   - {fileID: 4212687027859169021}
   - {fileID: 608765687010856623}
   antisipationParticles: []
+  antisipationAnimation: {fileID: 0}
   mainCanvasRT: {fileID: 0}
   reelID: 5
   exitPosition: 133
