@@ -105,6 +105,7 @@ namespace Reels
             }
             else
             {
+                _reelsScroll.isFreeSpinGame = false;
                 _freeSpinsCountFrameRT.localScale = Vector3.zero;
                 _soundManager.StopMusic(SoundType.FreeSpinsMusic);
                 _soundManager.PlayMusic(SoundType.BackMusic);
