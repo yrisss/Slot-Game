@@ -14,6 +14,7 @@ namespace Reels
 {
     public class ReelsScroll : MonoBehaviour
     {
+        //Final
         [Header("Components")] [SerializeField]
         private RectTransform[] reelsRT;
 
