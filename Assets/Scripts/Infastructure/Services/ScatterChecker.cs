@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Data;
+using DG.Tweening;
 using Reels;
 using UnityEngine;
 
@@ -25,7 +26,11 @@ namespace Infastructure.Services
             for (int i = 0; i < reel.VisibleSymbolsRTOnReel.Length; i++)
             {
                 if (reel.VisibleSymbols[i].SymbolInfo.Type == SymbolType.Scatter)
+                {
                     _scattersOnReel++;
+                    reel.VisibleSymbolsRTOnReel[i].DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f)
+                        .SetLoops(2, LoopType.Yoyo);
+                }
             }
 
             return _scattersOnReel;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using Infastructure.Management;
@@ -9,6 +10,8 @@ namespace View.PopUp
 {
     public class PopUpView : MonoBehaviour
     {
+        public Action ONHideWinPopUpComplete;
+        
         [SerializeField] private Image fade;
         [SerializeField] private RectTransform bonusGamePopUp;
         [SerializeField] private RectTransform totalWinPopUp;
@@ -48,6 +51,8 @@ namespace View.PopUp
             {
                 animationManager.ONWinAnimationComplete = null;
                 animationManager.StartChangeBalanceAnimation();
+                ONHideWinPopUpComplete?.Invoke();
+                ONHideWinPopUpComplete = null;
             });
         }
 

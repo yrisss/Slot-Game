@@ -3250,6 +3250,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4500942441218818066}
+        m_TargetAssemblyTypeName: Infastructure.Management.AnimationManager, Assembly-CSharp
+        m_MethodName: ForceStopChangeBalanceAnimation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &1227538358316593422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4248,7 +4260,7 @@ PrefabInstance:
     - target: {fileID: 7491669896417786926, guid: bd976cb68021b6746afa2ea8bf42eaa8, type: 3}
       propertyPath: visibleSymbols.Array.data[0]
       value: 
-      objectReference: {fileID: 2322784965082759471}
+      objectReference: {fileID: 9151443152806719426}
     - target: {fileID: 7491669896417786926, guid: bd976cb68021b6746afa2ea8bf42eaa8, type: 3}
       propertyPath: visibleSymbols.Array.data[1]
       value: 
@@ -4256,7 +4268,7 @@ PrefabInstance:
     - target: {fileID: 7491669896417786926, guid: bd976cb68021b6746afa2ea8bf42eaa8, type: 3}
       propertyPath: visibleSymbols.Array.data[2]
       value: 
-      objectReference: {fileID: 9151443152806719426}
+      objectReference: {fileID: 2322784965082759471}
     - target: {fileID: 8820441070605351524, guid: bd976cb68021b6746afa2ea8bf42eaa8, type: 3}
       propertyPath: m_SortingLayer
       value: 0

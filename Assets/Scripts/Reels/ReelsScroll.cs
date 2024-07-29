@@ -173,7 +173,7 @@ namespace Reels
                     {
                         _antisipationScroll.TryStartAntisipation(_reelsDictionary[reelRT].ReelID + 1, isForceStop);
                     }
-                    else if (_reelsDictionary[reelRT].ReelID >= 2 && !isFreeSpinGame)
+                    else if (_reelsDictionary[reelRT].ReelID > 2 && !isFreeSpinGame)
                     {
                         ONScrollStop?.Invoke();
                     }

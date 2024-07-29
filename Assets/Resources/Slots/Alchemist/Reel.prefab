@@ -199,7 +199,7 @@ RectTransform:
   m_Children:
   - {fileID: 5267047890829632692}
   - {fileID: 7980957177567119359}
-  m_Father: {fileID: 8232432556492709138}
+  m_Father: {fileID: 1915154267690991588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -370,7 +370,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9100465041135945516}
-  m_Father: {fileID: 8232432556492709138}
+  m_Father: {fileID: 1915154267690991588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -538,9 +538,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8185854136013770395}
-  - {fileID: 622071455833737639}
-  - {fileID: 233202046471926516}
+  - {fileID: 1915154267690991588}
   m_Father: {fileID: 3943427876327707568}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2230309042074694423
@@ -15211,6 +15209,40 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &3647309874866633365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1915154267690991588}
+  m_Layer: 0
+  m_Name: WinLineParticle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1915154267690991588
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3647309874866633365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8185854136013770395}
+  - {fileID: 622071455833737639}
+  - {fileID: 233202046471926516}
+  m_Father: {fileID: 8232432556492709138}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3660998306585544766
 GameObject:
   m_ObjectHideFlags: 0
@@ -19975,7 +20007,7 @@ ParticleSystemRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3660998306585544766}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -20498,7 +20530,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5659055165132673430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20638,7 +20670,7 @@ RectTransform:
   m_Children:
   - {fileID: 5376344657439684946}
   - {fileID: 2039576063560333444}
-  m_Father: {fileID: 8232432556492709138}
+  m_Father: {fileID: 1915154267690991588}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -30618,7 +30650,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8778887647533863155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30659,9 +30691,9 @@ MonoBehaviour:
   - {fileID: 3238048841827449465}
   - {fileID: 5303038775504355405}
   visibleSymbols:
-  - {fileID: 4608583169352720357}
-  - {fileID: 7604572958228930195}
   - {fileID: 4299623865260557243}
+  - {fileID: 7604572958228930195}
+  - {fileID: 4608583169352720357}
   particles:
   - {fileID: 1401700583079705310}
   - {fileID: 4212687027859169021}

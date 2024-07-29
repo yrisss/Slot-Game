@@ -23,7 +23,12 @@ namespace Animation
         private int _newBalance;
         private int _totalWin;
         private int _currentTotalWinBalance;
-    
+
+        private void Awake()
+        {
+            _newBalance = PlayerPrefs.GetInt("Balance", 0);
+        }
+
         public IEnumerator ChangeBalance()
         {
             _newBalance = _currentBalance + _totalWin;
@@ -48,6 +53,20 @@ namespace Animation
                 
                 yield return Wait;
             }
+            
+            _totalWin = _currentTotalWinBalance;
+            PlayerPrefs.SetInt("TotalWinBalance", _totalWin);
+            soundManager.StopMusic(SoundType.ChangeBalanceSound);
+        }
+
+        public void ForceChangeBalance()
+        {
+            StopCoroutine(ChangeBalance());
+            _currentBalance = _newBalance;
+            _currentTotalWinBalance = 0;
+            
+            balance.SetText(_currentBalance + " $");
+            totalWinBalance.SetText(_currentTotalWinBalance + " $");
             
             _totalWin = _currentTotalWinBalance;
             PlayerPrefs.SetInt("TotalWinBalance", _totalWin);

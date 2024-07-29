@@ -122,7 +122,7 @@ namespace Reels
                 }
                 else
                 {
-                    _reelsScroll.ShowPlayButton();
+                    _popUpView.ONHideWinPopUpComplete += () => _reelsScroll.ShowPlayButton();
                     ShowTotalWinPopUp();
                 }
             }
@@ -141,6 +141,7 @@ namespace Reels
             _stopButton.interactable = false;
             _startBalance = PlayerPrefs.GetInt("Balance", 0);
             isFreeSpin = true;
+            _reelsScroll.isFreeSpinGame = true;
             _animationManager.ONWinAnimationComplete = null;
             _animationManager.ONWinAnimationComplete += _reelsScroll.ScrollStart;
             _freeSpinsCounter = _freeSpinsCount;

@@ -32,7 +32,7 @@ namespace Infastructure.Services
 
                 for (int i = 0; i < symbolIndex.Length; i++)
                 {
-                    _winLineSymbols[i] = this.reels[i].VisibleSymbols[this.reels[i].VisibleSymbols.Length - 1 - symbolIndex[i]];
+                    _winLineSymbols[i] = this.reels[i].VisibleSymbols[symbolIndex[i]];
                 }
             
                 bool isWinningLine = CompareSymbols();

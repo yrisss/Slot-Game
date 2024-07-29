@@ -44,6 +44,11 @@ namespace Infastructure.Management
             StartCoroutine(changeBalanceAnimation.ChangeBalance());
         }
 
+        public void ForceStopChangeBalanceAnimation()
+        {
+            changeBalanceAnimation.ForceChangeBalance();
+        }
+
         public void ChangeFreeSpinsCount(int freeSpinsCount)
         {
             changeBalanceAnimation.ChangeFreeSpinsCount(freeSpinsCount);
