@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Infastructure.Management;
 using TMPro;
@@ -8,9 +7,6 @@ namespace Animation
 {
     public class ChangeBalanceAnimation : MonoBehaviour
     {
-        public Action ONChangeTotalWinBalanceAnimationComplete;
-        
-        
         [SerializeField] private TextMeshProUGUI balance;
         [SerializeField] private TextMeshProUGUI totalWinBalance;
         [SerializeField] private TextMeshProUGUI totalWinTextPopUp;
@@ -18,7 +14,7 @@ namespace Animation
         [SerializeField] private int duration;
         [SerializeField] private int countFPS;
         [SerializeField] private SoundManager soundManager;
-    
+
         private int _currentBalance;
         private int _newBalance;
         private int _totalWin;
@@ -33,27 +29,27 @@ namespace Animation
         {
             _newBalance = _currentBalance + _totalWin;
             PlayerPrefs.SetInt("Balance", _newBalance);
-            
+
             soundManager.PlayMusic(SoundType.ChangeBalanceSound);
             WaitForSeconds Wait = new WaitForSeconds(1f / countFPS);
             int stepAmount;
 
-            stepAmount = 1;//Mathf.CeilToInt((newBalance - currentBalance) / (_duration));
-        
+            stepAmount = 1;
+
             while (_currentBalance < _newBalance)
             {
                 _currentBalance += stepAmount;
                 _currentTotalWinBalance -= stepAmount;
-                
+
                 if (_currentBalance > _newBalance)
                     _currentBalance = _newBalance;
-                
+
                 balance.SetText(_currentBalance + " $");
                 totalWinBalance.SetText(_currentTotalWinBalance + " $");
-                
+
                 yield return Wait;
             }
-            
+
             _totalWin = _currentTotalWinBalance;
             PlayerPrefs.SetInt("TotalWinBalance", _totalWin);
             soundManager.StopMusic(SoundType.ChangeBalanceSound);
@@ -64,10 +60,10 @@ namespace Animation
             StopCoroutine(ChangeBalance());
             _currentBalance = _newBalance;
             _currentTotalWinBalance = 0;
-            
+
             balance.SetText(_currentBalance + " $");
             totalWinBalance.SetText(_currentTotalWinBalance + " $");
-            
+
             _totalWin = _currentTotalWinBalance;
             PlayerPrefs.SetInt("TotalWinBalance", _totalWin);
             soundManager.StopMusic(SoundType.ChangeBalanceSound);
@@ -76,11 +72,11 @@ namespace Animation
         public void ChangeTotalWinBalance()
         {
             totalWinBalance.SetText(_totalWin + " $");
-                
+
             _currentTotalWinBalance = _totalWin;
             PlayerPrefs.SetInt("TotalWinBalance", _totalWin);
         }
-        
+
         public void ChangeFreeSpinsCount(int freeSpinsCount)
         {
             freeSpins.SetText(freeSpinsCount + " FS");

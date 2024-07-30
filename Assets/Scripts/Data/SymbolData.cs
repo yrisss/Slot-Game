@@ -7,13 +7,11 @@ namespace Data
     public class SymbolData : ScriptableObject
     {
         [SerializeField] private Sprite sprite;
-        public Sprite Sprite => sprite;
-        
         [SerializeField] private int cost;
-        public int Cost => cost;
-
         [SerializeField] private SymbolType symbolType;
-        public SymbolType Type => symbolType;
 
+        public Sprite Sprite => sprite;
+        public int Cost => cost;
+        public SymbolType Type => symbolType;
     }
 }

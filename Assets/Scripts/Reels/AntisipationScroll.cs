@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Infastructure.Management;
@@ -41,9 +40,8 @@ namespace Reels
             _prepareAntisipationDuration = prepareAntisipationDuration;
         }
 
-
         public void TryStartAntisipation(int AntisipationReelID, bool isForceStop)
-        { 
+        {
             currentReelIndex = AntisipationReelID - 1;
 
             if (isForceStop == true)
@@ -61,7 +59,6 @@ namespace Reels
             StartAntisipationScroll(currentReelIndex);
         }
 
-
         private void StartAntisipationScroll(int currentReelIndex)
         {
             bool lastReel = currentReelIndex + 1 == _reels.Length;
@@ -69,7 +66,8 @@ namespace Reels
             var currentReelRT = _reelsRT[currentReelIndex];
             var currentReel = _reels[currentReelIndex];
 
-            _animationManager.StartAnticipationAnimation(_reels, currentReel, currentReelRT, currentReelIndex, _antisipationDuration);
+            _animationManager.StartAnticipationAnimation(_reels, currentReel, currentReelRT, currentReelIndex,
+                _antisipationDuration);
             AntisipationReelScroll(currentReelIndex, currentReelRT);
 
             if (lastReel)

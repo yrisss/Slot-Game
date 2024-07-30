@@ -31,7 +31,7 @@ namespace Reels
         private int _currentFinalScreen = 0;
 
         private ReelState _reelState = ReelState.Stop;
-    
+
         public ReelState ReelState
         {
             get => _reelState;
@@ -41,17 +41,12 @@ namespace Reels
         public RectTransform[] VisibleSymbolsRTOnReel => visibleSymbolsRT;
         public Symbol[] VisibleSymbols => visibleSymbols;
         public UIParticle[] Particles => particles;
-
         public UIParticle[] AntisipationParticles => antisipationParticles;
-
         public AnticipationAnimation AnticipationAnimation => antisipationAnimation;
-        
-        public float SymbolHeight => _symbolHeight;
         public int ReelID => reelID;
     
         private void Start()
         {
-            // Debug.Log(symbolsOnReel[0].transform.position);
             _symbolHeight = symbolsOnReel[0].rect.height;
             _mainCanvasScale = mainCanvasRT.lossyScale.y;
         }

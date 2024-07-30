@@ -17,7 +17,6 @@ namespace Infastructure.Services
 
         private int _scattersOnReel;
         private List<int[]> _trueWinLines;
-
         private Symbol[] _winLineSymbols;
 
         public int CheckAnticipation(Reel reel)
@@ -48,7 +47,7 @@ namespace Infastructure.Services
                         _scattersOnReel++;
                 }
             }
-            
+
             return _scattersOnReel;
         }
     }

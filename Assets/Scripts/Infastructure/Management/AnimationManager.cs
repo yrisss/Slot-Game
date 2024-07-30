@@ -13,8 +13,6 @@ namespace Infastructure.Management
         [SerializeField] private AnticipationAnimation anticipationAnimation;
 
         public Action ONWinAnimationComplete;
-        public Action ONAnticipationAnimationComplete;
-
 
         private void Start()
         {
@@ -23,10 +21,10 @@ namespace Infastructure.Management
 
         public void StartWinAnimation(List<int[]> winAnimSymbolIndexes)
         {
-            if(winAnimSymbolIndexes.Count > 0)
+            if (winAnimSymbolIndexes.Count > 0)
                 winAnimation.WinAnim(winAnimSymbolIndexes);
         }
-        
+
         private void StopWinAnimation()
         {
             ONWinAnimationComplete?.Invoke();
@@ -35,10 +33,9 @@ namespace Infastructure.Management
         public void ForceStopWinAnimation()
         {
             winAnimation.ForceStopWinAnim();
-            winAnimation.IsAnimationComplete = true;
             ONWinAnimationComplete?.Invoke();
         }
-        
+
         public void StartChangeBalanceAnimation()
         {
             StartCoroutine(changeBalanceAnimation.ChangeBalance());
@@ -54,7 +51,8 @@ namespace Infastructure.Management
             changeBalanceAnimation.ChangeFreeSpinsCount(freeSpinsCount);
         }
 
-        public void StartAnticipationAnimation(Reel[] reels, Reel reel, RectTransform reelRT, int currentReelIndex, float duration)
+        public void StartAnticipationAnimation(Reel[] reels, Reel reel, RectTransform reelRT, int currentReelIndex,
+            float duration)
         {
             anticipationAnimation = reel.AnticipationAnimation;
             anticipationAnimation.StartAnticipationAnim(reels, reel, reelRT, currentReelIndex, duration);

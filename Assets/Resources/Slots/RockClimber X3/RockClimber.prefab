@@ -2403,7 +2403,6 @@ MonoBehaviour:
   - {fileID: 5508746294642376507}
   - {fileID: 8574525718587264288}
   soundManager: {fileID: 479073889988191388}
-  IsAnimationComplete: 0
 --- !u!1 &7873521781852500760
 GameObject:
   m_ObjectHideFlags: 0
@@ -2969,7 +2968,6 @@ MonoBehaviour:
   linearDuration: 3.5
   stoppingDuration: 1
   visibleSymbolsOnReel: 3
-  symbolHeight: 144
   antisipationReelRT: {fileID: 3734875085419177594}
   prepareAntisipationSpeed: -4000
   prepareAntisipationDuration: 6

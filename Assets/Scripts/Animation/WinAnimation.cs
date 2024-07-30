@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Coffee.UIExtensions;
 using DG.Tweening;
 using Infastructure.Management;
 using Reels;
@@ -13,12 +10,11 @@ namespace Animation
 {
     public class WinAnimation : MonoBehaviour
     {
-        public Action ONAnimationComplete;
         [SerializeField] private Reel[] reels;
         [SerializeField] private SoundManager soundManager;
-
-        public bool IsAnimationComplete;
         
+        public Action ONAnimationComplete;
+
         private RectTransform[] _visibleSymbolsOnReel;
         private int _lineCounter;
         private List<int[]> _winLines;
@@ -27,13 +23,11 @@ namespace Animation
 
         private void Start()
         {
-            IsAnimationComplete = false;
             _symbolSequence = new List<Sequence>();
         }
 
         public void WinAnim(List<int[]> winSymbolIndex)
         {
-            IsAnimationComplete = false;
             _symbolSequence.Clear();
             _winLines = winSymbolIndex;
             _lineCounter = 0;
@@ -55,7 +49,6 @@ namespace Animation
 
         private void Animation(RectTransform[] visibleSymbolsOnReel, int[] winSymbolIndex, int currentReel)
         {
-            //Array.Reverse(winSymbolIndex);
             for (int i = 0; i < visibleSymbolsOnReel.Length; i++)
             {
                 if (i == winSymbolIndex[currentReel])
@@ -76,14 +69,12 @@ namespace Animation
             DOTween.Kill(currentSymbol);
             Sequence symbolSequence = DOTween.Sequence();
             _symbolSequence.Add(symbolSequence);
-        
+
             currentParticle.gameObject.SetActive(true);
             currentParticle.Play();
 
-            symbolSequence
-                //.Append(currentSymbol.DOMoveZ(-10f, 1f))
-                .Append(currentSymbol.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).SetLoops(6, LoopType.Yoyo));
-               // .Append(currentSymbol.DOMoveZ(0f, 1f));
+            symbolSequence.Append(currentSymbol.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f)
+                .SetLoops(6, LoopType.Yoyo));
 
             symbolSequence.OnComplete(() =>
             {
@@ -114,7 +105,6 @@ namespace Animation
             }
             else
             {
-                IsAnimationComplete = true;
                 ONAnimationComplete?.Invoke();
             }
         }
@@ -125,7 +115,7 @@ namespace Animation
             {
                 sequence?.Kill();
             }
-            
+
             foreach (var reel in reels)
             {
                 foreach (var particle in reel.Particles)
@@ -133,7 +123,7 @@ namespace Animation
                     particle.Stop();
                     particle.gameObject.SetActive(false);
                 }
-                
+
                 foreach (var symbol in reel.VisibleSymbolsRTOnReel)
                 {
                     Image symbolImage = symbol.GetComponent<Image>();
@@ -142,6 +132,7 @@ namespace Animation
                         symbolImage.DOKill();
                         symbolImage.DOFade(1f, 0.3f);
                     }
+
                     DOTween.Kill(symbol);
                     symbol.DOScale(Vector3.one, 0.2f);
                     symbol.DOMoveZ(0f, 0.2f);

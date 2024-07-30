@@ -1,26 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Infastructure.Management;
 using Infastructure.Services;
 using UnityEngine;
 using UnityEngine.UI;
 using View.PopUp;
 
-
 namespace Reels
 {
     public class FreeSpinGame
     {
         private ReelsScroll _reelsScroll;
-
-        private RectTransform[] _reelsRT;
         private Dictionary<RectTransform, Reel> _reelsDictionary;
 
         private Button _stopButton;
         private RectTransform _freeSpinsCountFrameRT;
-
-        private int _freeSpinsCount;
 
         private PopUpView _popUpView;
         private AnimationManager _animationManager;
@@ -28,19 +22,17 @@ namespace Reels
         private WinChecker _winChecker;
         private ScatterChecker _scatterChecker;
 
+        private int scattersCount = 3;
         private bool isFreeSpin;
+        private int _freeSpinsCount;
         private int _freeSpinsCounter;
         private List<int[]> _trueWinLines;
-        private int _startBalance = 0;
 
-
-        public FreeSpinGame(ReelsScroll reelsScroll, RectTransform[] reelsRT,
-            Dictionary<RectTransform, Reel> reelsDictionary, Button stopButton, int freeSpinsCount, PopUpView popUpView,
-            AnimationManager animationManager, SoundManager soundManager, WinChecker winChecker,
+        public FreeSpinGame(ReelsScroll reelsScroll, Dictionary<RectTransform, Reel> reelsDictionary, Button stopButton, int freeSpinsCount, 
+            PopUpView popUpView, AnimationManager animationManager, SoundManager soundManager, WinChecker winChecker,
             ScatterChecker scatterChecker, RectTransform freeSpinsCountFrameRT)
         {
             _reelsScroll = reelsScroll;
-            _reelsRT = reelsRT;
             _reelsDictionary = reelsDictionary;
             _stopButton = stopButton;
             _freeSpinsCount = freeSpinsCount;
@@ -62,7 +54,7 @@ namespace Reels
                     return true;
                 }
 
-                if (_scatterChecker.FreeSpinsChecker(_reelsDictionary[reelRT].ReelID - 1) >= 3)
+                if (_scatterChecker.FreeSpinsChecker(_reelsDictionary[reelRT].ReelID - 1) >= scattersCount)
                 {
                     _trueWinLines = _winChecker.CheckResult();
                     if (_trueWinLines.Count != 0)
@@ -127,8 +119,7 @@ namespace Reels
                 }
             }
         }
-
-
+        
         private void ShowTotalWinPopUp()
         {
             _popUpView.ShowWinPopUp(_animationManager);
@@ -139,7 +130,7 @@ namespace Reels
             _freeSpinsCountFrameRT.localScale = Vector3.one;
             _reelsScroll.HidePlayButton();
             _stopButton.interactable = false;
-            _startBalance = PlayerPrefs.GetInt("Balance", 0);
+            PlayerPrefs.GetInt("Balance", 0);
             isFreeSpin = true;
             _reelsScroll.isFreeSpinGame = true;
             _animationManager.ONWinAnimationComplete = null;

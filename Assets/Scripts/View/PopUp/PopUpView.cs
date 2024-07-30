@@ -11,13 +11,12 @@ namespace View.PopUp
     public class PopUpView : MonoBehaviour
     {
         public Action ONHideWinPopUpComplete;
-        
+
         [SerializeField] private Image fade;
         [SerializeField] private RectTransform bonusGamePopUp;
         [SerializeField] private RectTransform totalWinPopUp;
         [SerializeField] private TextMeshProUGUI totalWinText;
-        [SerializeField] private TextMeshProUGUI balanceText; 
-        
+        [SerializeField] private TextMeshProUGUI balanceText;
 
         public void ShowWinPopUp(AnimationManager animationManager)
         {
@@ -32,13 +31,13 @@ namespace View.PopUp
             ShowPopUp(bonusGamePopUp);
             StartCoroutine(HideBonusPopUp(bonusGamePopUp));
         }
-        
+
 
         private void ShowPopUp(RectTransform popup)
         {
-                fade.rectTransform.DOScale(Vector3.one, 0f);
-                fade.DOFade(0.83f, 0.5f);
-                popup.DOScale(Vector3.one, 0.5f);
+            fade.rectTransform.DOScale(Vector3.one, 0f);
+            fade.DOFade(0.83f, 0.5f);
+            popup.DOScale(Vector3.one, 0.5f);
         }
 
         private IEnumerator HideWinPopUp(RectTransform popup, AnimationManager animationManager)
@@ -57,12 +56,12 @@ namespace View.PopUp
         }
 
         private IEnumerator HideBonusPopUp(RectTransform popup)
-            {
-                yield return new WaitForSeconds(3f);
+        {
+            yield return new WaitForSeconds(3f);
 
-                fade.rectTransform.DOScale(Vector3.zero, 0f);
-                fade.DOFade(0f, 0.5f);
-                popup.DOScale(Vector3.zero, 0.5f);
-            }
+            fade.rectTransform.DOScale(Vector3.zero, 0f);
+            fade.DOFade(0f, 0.5f);
+            popup.DOScale(Vector3.zero, 0.5f);
         }
     }
+}

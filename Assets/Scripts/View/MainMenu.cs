@@ -11,7 +11,7 @@ namespace View
 
         private MainCanvas currentSlotCanvas;
         private GameObject currentSlotObject;
-        
+
         public void LoadSlot(int index)
         {
             currentSlotObject = Instantiate(slotsGameData.SlotsGame[index]);

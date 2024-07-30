@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DG.Tweening;
 using Infastructure.Management;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +12,6 @@ namespace Reels
         private Dictionary<RectTransform, Reel> _reelsDictionary;
         private Button _stopButton;
         private AnimationManager _animationManager;
-
         private bool isForceStop;
 
         public ForceStop(ReelsScroll reelsScroll, RectTransform[] reelsRT,
@@ -38,7 +36,7 @@ namespace Reels
                     {
                         ForceAnimStop();
                     }
-                    
+
                     else
                     {
                         isForceStop = true;
@@ -46,7 +44,6 @@ namespace Reels
                     }
                 }
             }
-
 
             return isForceStop;
         }
@@ -56,7 +53,7 @@ namespace Reels
             _stopButton.interactable = false;
             _animationManager.ForceStopWinAnimation();
         }
-        
+
         private void ForceScrollStop()
         {
             _stopButton.interactable = false;
